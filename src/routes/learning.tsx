@@ -1,0 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { GraduationCap } from "lucide-react";
+import { PageShell } from "@/components/layout/page-shell";
+import { ComingSoonPage } from "@/components/common/coming-soon";
+export const Route = createFileRoute("/learning")({ head: () => ({ meta: [{ title: "Learning — DevCommand" }, { name: "description", content: "Turn technologies and topics into visible, consistent progress." }, { property: "og:title", content: "Learning — DevCommand" }, { property: "og:description", content: "Turn technologies and topics into visible, consistent progress." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: () => <PageShell><ComingSoonPage title="Learning" description="Turn technologies and topics into visible, consistent progress." icon={GraduationCap} features={["Technologies", "Topics and resources", "Progress tracking", "Learning hours", "Study history"]} /></PageShell> });

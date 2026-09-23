@@ -1,0 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Settings } from "lucide-react";
+import { PageShell } from "@/components/layout/page-shell";
+import { ComingSoonPage } from "@/components/common/coming-soon";
+export const Route = createFileRoute("/settings")({ head: () => ({ meta: [{ title: "Settings — DevCommand" }, { name: "description", content: "Configure your profile, workspace preferences, and future integrations." }, { property: "og:title", content: "Settings — DevCommand" }, { property: "og:description", content: "Configure your profile, workspace preferences, and future integrations." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: () => <PageShell><ComingSoonPage title="Settings" description="Configure your profile, workspace preferences, and future integrations." icon={Settings} features={["Profile preferences", "Workspace settings", "Notification controls", "Appearance", "API connection status"]} /></PageShell> });
