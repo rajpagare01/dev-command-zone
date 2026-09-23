@@ -1,7 +1,9 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { authStorage } from "@/services/auth-storage";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: () => { throw redirect({ to: "/dashboard" }); },
+  ssr: false,
+  beforeLoad: () => { throw redirect({ to: authStorage.getToken() ? "/dashboard" : "/login" }); },
   head: () => ({ meta: [
     { title: "DevCommand — Personal Developer Command Center" },
     { name: "description", content: "Manage your developer journey from one focused workspace." },

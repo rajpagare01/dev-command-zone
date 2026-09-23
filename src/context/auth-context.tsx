@@ -1,4 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { authService, type LoginPayload, type RegisterPayload } from "@/services/api";
 import { authStorage, extractAuth, type AuthUser } from "@/services/auth-storage";
 
@@ -14,13 +16,18 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentUser(authStorage.read()?.user ?? null);
-    const clearSession = () => setCurrentUser(null);
+    const clearSession = () => {
+      setCurrentUser(null);
+      toast.error("Session expired. Please sign in again.");
+      void navigate({ to: "/login", replace: true });
+    };
     window.addEventListener("devcommand:session-expired", clearSession);
     return () => window.removeEventListener("devcommand:session-expired", clearSession);
-  }, []);
+  }, [navigate]);
 
   const login = useCallback(async (payload: LoginPayload) => {
     const response = await authService.login(payload);
