@@ -41,7 +41,7 @@ export function extractAuth(response: Record<string, unknown>, fallbackEmail: st
   const email = stringValue(userRecord, ["email", "username"]) ?? stringValue(claims, ["email", "sub"]) ?? fallbackEmail;
   const name = stringValue(userRecord, ["name", "fullName", "displayName"]) ?? stringValue(claims, ["name", "fullName"]) ?? email.split("@")[0] ?? "Developer";
   const id = stringValue(userRecord, ["id", "userId"]) ?? stringValue(claims, ["sub", "userId"]);
-  return { token, user: { id, name, email } };
+  return { token, user: { ...(id ? { id } : {}), name, email } };
 }
 
 function read(): StoredAuth | null {

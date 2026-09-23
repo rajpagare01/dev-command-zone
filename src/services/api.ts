@@ -10,8 +10,8 @@ export interface ApiErrorDetails {
 }
 
 export class ApiError extends Error {
-  status?: number;
-  fieldErrors?: Record<string, string>;
+  status: number | undefined;
+  fieldErrors: Record<string, string> | undefined;
 
   constructor(details: ApiErrorDetails) {
     super(details.message);
@@ -64,10 +64,11 @@ function getFieldErrors(data: unknown): Record<string, string> | undefined {
 function toApiError(error: unknown): ApiError {
   if (!(error instanceof AxiosError)) return new ApiError({ message: "Something went wrong. Please try again." });
   if (!error.response) return new ApiError({ message: "Unable to connect to server." });
+  const fieldErrors = getFieldErrors(error.response.data);
   return new ApiError({
     status: error.response.status,
     message: getMessage(error.response.data) ?? "The server could not complete your request.",
-    fieldErrors: getFieldErrors(error.response.data),
+    ...(fieldErrors ? { fieldErrors } : {}),
   });
 }
 
