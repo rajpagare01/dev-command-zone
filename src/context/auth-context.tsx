@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const clearSession = () => {
       setCurrentUser(null);
       toast.error("Session expired. Please sign in again.");
-      void navigate({ to: "/login", search: {}, replace: true });
+      void navigate({ to: "/login", search: { redirect: undefined }, replace: true });
     };
     window.addEventListener("devcommand:session-expired", clearSession);
     return () => window.removeEventListener("devcommand:session-expired", clearSession);

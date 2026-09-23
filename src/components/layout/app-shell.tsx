@@ -32,7 +32,7 @@ function SidebarContent({ collapsed = false, onNavigate, name, email }: { collap
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false); const [mobileOpen, setMobileOpen] = useState(false);
-  const { currentUser, logout } = useAuth(); const navigate = useNavigate(); const name = currentUser?.name ?? "Developer"; const email = currentUser?.email ?? ""; const firstName = name.split(" ")[0] ?? name; const signOut = async () => { logout(); await navigate({ to: "/login", search: {}, replace: true }); };
+  const { currentUser, logout } = useAuth(); const navigate = useNavigate(); const name = currentUser?.name ?? "Developer"; const email = currentUser?.email ?? ""; const firstName = name.split(" ")[0] ?? name; const signOut = async () => { logout(); await navigate({ to: "/login", search: { redirect: undefined }, replace: true }); };
   return <TooltipProvider><div className="min-h-screen bg-background text-foreground">
     <aside className={cn("fixed inset-y-0 left-0 z-40 hidden border-r border-border bg-sidebar transition-[width] duration-200 md:block", collapsed ? "w-[72px]" : "w-60")}><SidebarContent collapsed={collapsed} name={name} email={email} /><Button variant="outline" size="icon" onClick={() => setCollapsed((v) => !v)} className="absolute -right-3 top-20 size-6 rounded-full bg-card" aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}><ChevronLeft className={cn("size-3 transition-transform", collapsed && "rotate-180")} /></Button></aside>
     <div className={cn("transition-[padding] duration-200", collapsed ? "md:pl-[72px]" : "md:pl-60")}>
