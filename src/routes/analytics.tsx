@@ -1,5 +1,0 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { BarChart3 } from "lucide-react";
-import { PageShell } from "@/components/layout/page-shell";
-import { ComingSoonPage } from "@/components/common/coming-soon";
-export const Route = createFileRoute("/analytics")({ head: () => ({ meta: [{ title: "Analytics — DevCommand" }, { name: "description", content: "Understand your development momentum without losing sight of the work." }, { property: "og:title", content: "Analytics — DevCommand" }, { property: "og:description", content: "Understand your development momentum without losing sight of the work." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: () => <PageShell><ComingSoonPage title="Analytics" description="Understand your development momentum without losing sight of the work." icon={BarChart3} features={["DSA analytics", "Learning analytics", "Job analytics", "Task completion", "Developer activity"]} /></PageShell> });

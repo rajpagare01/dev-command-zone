@@ -1,0 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { FolderKanban } from "lucide-react";
+import { PageShell } from "@/components/layout/page-shell";
+import { ComingSoonPage } from "@/components/common/coming-soon";
+export const Route = createFileRoute("/_authenticated/projects")({ head: () => ({ meta: [{ title: "Projects — DevCommand" }, { name: "description", content: "Keep active builds, technology choices, and delivery progress together." }, { property: "og:title", content: "Projects — DevCommand" }, { property: "og:description", content: "Keep active builds, technology choices, and delivery progress together." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: () => <PageShell><ComingSoonPage title="Projects" description="Keep active builds, technology choices, and delivery progress together." icon={FolderKanban} features={["Project cards", "Technology stack", "GitHub repository", "Live deployment", "Progress and tasks"]} /></PageShell> });

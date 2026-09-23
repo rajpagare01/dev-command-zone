@@ -1,5 +1,0 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { BriefcaseBusiness } from "lucide-react";
-import { PageShell } from "@/components/layout/page-shell";
-import { ComingSoonPage } from "@/components/common/coming-soon";
-export const Route = createFileRoute("/jobs")({ head: () => ({ meta: [{ title: "Job Applications — DevCommand" }, { name: "description", content: "Manage every opportunity and interview stage in one clear pipeline." }, { property: "og:title", content: "Job Applications — DevCommand" }, { property: "og:description", content: "Manage every opportunity and interview stage in one clear pipeline." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: () => <PageShell><ComingSoonPage title="Job Applications" description="Manage every opportunity and interview stage in one clear pipeline." icon={BriefcaseBusiness} features={["Company and role", "Application status", "Application date", "Interview rounds", "Pipeline filters"]} /></PageShell> });

@@ -1,5 +1,0 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Code2 } from "lucide-react";
-import { PageShell } from "@/components/layout/page-shell";
-import { ComingSoonPage } from "@/components/common/coming-soon";
-export const Route = createFileRoute("/dsa")({ head: () => ({ meta: [{ title: "DSA Tracker — DevCommand" }, { name: "description", content: "Track every problem you solve and build consistent problem-solving habits." }, { property: "og:title", content: "DSA Tracker — DevCommand" }, { property: "og:description", content: "Track every problem you solve and build consistent problem-solving habits." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: () => <PageShell><ComingSoonPage title="DSA Tracker" description="Track every problem you solve and build consistent problem-solving habits." icon={Code2} features={["Problem table", "Search and filters", "Difficulty and status", "Topics and pagination", "Add problem"]} /></PageShell> });
