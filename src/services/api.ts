@@ -67,7 +67,9 @@ function toApiError(error: unknown): ApiError {
   const fieldErrors = getFieldErrors(error.response.data);
   return new ApiError({
     status: error.response.status,
-    message: getMessage(error.response.data) ?? "The server could not complete your request.",
+    message: error.response.status >= 500
+      ? "The server could not complete your request. Please try again."
+      : getMessage(error.response.data) ?? "The server could not complete your request.",
     ...(fieldErrors ? { fieldErrors } : {}),
   });
 }
