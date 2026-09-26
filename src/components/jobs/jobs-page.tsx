@@ -18,7 +18,7 @@ import { InterviewRoundsDialog } from "./interview-rounds-dialog";
 import { JobFormDialog } from "./job-form-dialog";
 import { applicationTone, jobLabel } from "./job-labels";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 const ALL = "all";
 const sortLabel: Record<JobSortField, string> = { createdAt: "Date added", applicationDate: "Application date", company: "Company", status: "Status" };
 
@@ -26,32 +26,39 @@ const Pill = ({ s }: { s: ApplicationStatus }) => <span className={cn("inline-fl
 const fmtDate = (d: string) => new Date(`${d.slice(0, 10)}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 const errMsg = (e: unknown) => (e instanceof ApiError ? (e.status === 404 ? "Application not found. It may have been deleted." : e.message) : "Something went wrong. Please try again.");
 
-function useDebounced(value: string, ms = 350) {
-  const [v, setV] = useState(value);
-  useEffect(() => { const t = setTimeout(() => setV(value.trim()), ms); return () => clearTimeout(t); }, [value, ms]);
-  return v;
-}
+type TextKey = "search" | "company" | "role" | "source";
+interface JobQuery { search: string; company: string; role: string; source: string; status: ApplicationStatus | undefined; page: number; size: number; sortBy: JobSortField; direction: SortDirection }
+const EMPTY_TEXT: Record<TextKey, string> = { search: "", company: "", role: "", source: "" };
+const INITIAL: JobQuery = { ...EMPTY_TEXT, status: undefined, page: 0, size: PAGE_SIZE, sortBy: "createdAt", direction: "desc" };
+const DEBOUNCE_MS = 400;
 
 export function JobsPage() {
   const qc = useQueryClient();
-  const [searchInput, setSearchInput] = useState("");
-  const [companyInput, setCompanyInput] = useState("");
-  const [roleInput, setRoleInput] = useState("");
-  const [sourceInput, setSourceInput] = useState("");
-  const [status, setStatus] = useState<ApplicationStatus | undefined>();
-  const [sortBy, setSortBy] = useState<JobSortField>("createdAt");
-  const [direction, setDirection] = useState<SortDirection>("desc");
-  const [page, setPage] = useState(0);
+  // Single source of truth for the request. Text boxes keep a local draft that is committed (trimmed, page reset) after a debounce.
+  const [query, setQuery] = useState<JobQuery>(INITIAL);
+  const [draft, setDraft] = useState<Record<TextKey, string>>(EMPTY_TEXT);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<JobApplication | null>(null);
   const [deleting, setDeleting] = useState<JobApplication | null>(null);
   const [interviewsFor, setInterviewsFor] = useState<JobApplication | null>(null);
 
-  const search = useDebounced(searchInput), company = useDebounced(companyInput), role = useDebounced(roleInput), source = useDebounced(sourceInput);
-  useEffect(() => { setPage(0); }, [search, company, role, source, status, sortBy, direction]);
+  useEffect(() => {
+    const t = setTimeout(() => setQuery((q) => {
+      const next = { search: draft.search.trim(), company: draft.company.trim(), role: draft.role.trim(), source: draft.source.trim() };
+      const changed = (Object.keys(next) as TextKey[]).some((k) => next[k] !== q[k]);
+      return changed ? { ...q, ...next, page: 0 } : q;
+    }), DEBOUNCE_MS);
+    return () => clearTimeout(t);
+  }, [draft]);
 
-  const list = useQuery(jobQueries.list({ search, company, role, source, status, sortBy, direction, page, size: PAGE_SIZE }));
-  const hasFilters = !!(searchInput || companyInput || roleInput || sourceInput || status);
+  /** Any non-page change resets to page 0 in the same update, so no request is ever sent with new filters on an old page. */
+  const update = (patch: Partial<Omit<JobQuery, "page">>) => setQuery((q) => ({ ...q, ...patch, page: 0 }));
+  const setPage = (page: number) => setQuery((q) => ({ ...q, page }));
+  const setText = (k: TextKey, v: string) => setDraft((d) => ({ ...d, [k]: v }));
+  const { status, sortBy, direction, page } = query;
+
+  const list = useQuery(jobQueries.list(query));
+  const hasFilters = !!(draft.search || draft.company || draft.role || draft.source || status);
 
   // Invalidating analytics makes the Dashboard refetch on next visit.
   const refresh = () => Promise.all([qc.invalidateQueries({ queryKey: jobQueries.all }), qc.invalidateQueries({ queryKey: ["analytics"] })]);
