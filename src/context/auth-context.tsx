@@ -1,11 +1,12 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { authService, type LoginPayload, type RegisterPayload } from "@/services/api";
 import { authStorage, extractAuth, type AuthUser } from "@/services/auth-storage";
 
 export interface AuthContextValue {
   isAuthenticated: boolean;
+  token: string | null;
   currentUser: AuthUser | null;
   login: (payload: LoginPayload) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
@@ -15,25 +16,33 @@ export interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [session, setSession] = useState<{ token: string; user: AuthUser } | null>(null);
   const navigate = useNavigate();
+  const router = useRouter();
+
+  const clearCaches = useCallback(() => {
+    const ctx = router.options.context as { queryClient?: { clear: () => void } } | undefined;
+    ctx?.queryClient?.clear();
+  }, [router]);
 
   useEffect(() => {
-    setCurrentUser(authStorage.read()?.user ?? null);
-    const clearSession = () => {
-      setCurrentUser(null);
+    setSession(authStorage.read());
+    const onExpired = () => {
+      setSession(null);
+      clearCaches();
+      if (window.location.pathname === "/login") return; // avoid redirect loops
       toast.error("Session expired. Please sign in again.");
       void navigate({ to: "/login", search: { redirect: undefined }, replace: true });
     };
-    window.addEventListener("devcommand:session-expired", clearSession);
-    return () => window.removeEventListener("devcommand:session-expired", clearSession);
-  }, [navigate]);
+    window.addEventListener("devcommand:session-expired", onExpired);
+    return () => window.removeEventListener("devcommand:session-expired", onExpired);
+  }, [navigate, clearCaches]);
 
   const login = useCallback(async (payload: LoginPayload) => {
     const response = await authService.login(payload);
     const auth = extractAuth(response, payload.email);
     authStorage.save(auth);
-    setCurrentUser(auth.user);
+    setSession(auth);
   }, []);
 
   const register = useCallback(async (payload: RegisterPayload) => {
@@ -42,16 +51,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     authStorage.clear();
-    setCurrentUser(null);
-  }, []);
+    setSession(null);
+    clearCaches();
+  }, [clearCaches]);
 
   const value = useMemo<AuthContextValue>(() => ({
-    isAuthenticated: currentUser !== null,
-    currentUser,
+    isAuthenticated: session !== null,
+    token: session?.token ?? null,
+    currentUser: session?.user ?? null,
     login,
     register,
     logout,
-  }), [currentUser, login, register, logout]);
+  }), [session, login, register, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

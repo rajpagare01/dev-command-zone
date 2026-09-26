@@ -61,15 +61,26 @@ function getFieldErrors(data: unknown): Record<string, string> | undefined {
   );
 }
 
+const STATUS_MESSAGES: Record<number, string> = {
+  400: "Please check the details and try again.",
+  401: "Authentication required. Please sign in.",
+  403: "You don't have permission to do that.",
+  404: "The requested resource was not found.",
+  409: "This conflicts with existing data.",
+};
+
 function toApiError(error: unknown): ApiError {
   if (!(error instanceof AxiosError)) return new ApiError({ message: "Something went wrong. Please try again." });
   if (!error.response) return new ApiError({ message: "Unable to connect to server." });
-  const fieldErrors = getFieldErrors(error.response.data);
+  const { status, data } = error.response;
+  const fieldErrors = getFieldErrors(data);
+  const backendMessage = getMessage(data);
+  const safeBackendMessage = backendMessage && backendMessage.length < 200 && !/exception|\bat\s+[\w.$]+\(/i.test(backendMessage) ? backendMessage : undefined;
   return new ApiError({
-    status: error.response.status,
-    message: error.response.status >= 500
-      ? "The server could not complete your request. Please try again."
-      : getMessage(error.response.data) ?? "The server could not complete your request.",
+    status,
+    message: status >= 500
+      ? "Server error. Please try again later."
+      : safeBackendMessage ?? STATUS_MESSAGES[status] ?? "The server could not complete your request.",
     ...(fieldErrors ? { fieldErrors } : {}),
   });
 }
