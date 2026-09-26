@@ -21,3 +21,36 @@ export const analyticsQueries = {
   learning: () => queryOptions({ queryKey: ["analytics", "learning"], queryFn: analyticsService.learning, ...fresh }),
   projects: () => queryOptions({ queryKey: ["analytics", "projects"], queryFn: analyticsService.projects, ...fresh }),
 };
+
+// Named service functions for the dedicated Analytics page.
+export const getOverviewAnalytics = () => analyticsService.overview();
+export const getDsaAnalytics = () => analyticsService.dsa();
+export const getTaskAnalytics = () => analyticsService.tasks();
+export const getJobAnalytics = () => analyticsService.jobs();
+export const getLearningAnalytics = () => analyticsService.learning();
+export const getProjectAnalytics = () => analyticsService.projects();
+
+export interface AnalyticsPageData {
+  overview: AnalyticsOverview;
+  dsa: DsaAnalytics;
+  tasks: TaskAnalytics;
+  jobs: JobAnalytics;
+  learning: LearningAnalytics;
+  projects: ProjectAnalytics;
+}
+
+// All six endpoints fire in parallel; the page renders only real backend data.
+export async function fetchAllAnalytics(): Promise<AnalyticsPageData> {
+  const [overview, dsa, tasks, jobs, learning, projects] = await Promise.all([
+    getOverviewAnalytics(),
+    getDsaAnalytics(),
+    getTaskAnalytics(),
+    getJobAnalytics(),
+    getLearningAnalytics(),
+    getProjectAnalytics(),
+  ]);
+  return { overview, dsa, tasks, jobs, learning, projects };
+}
+
+export const analyticsPageQuery = () =>
+  queryOptions({ queryKey: ["analytics", "page"], queryFn: fetchAllAnalytics, ...fresh });
