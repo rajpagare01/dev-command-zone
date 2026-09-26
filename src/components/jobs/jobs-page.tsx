@@ -18,7 +18,7 @@ import { InterviewRoundsDialog } from "./interview-rounds-dialog";
 import { JobFormDialog } from "./job-form-dialog";
 import { applicationTone, jobLabel } from "./job-labels";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 const ALL = "all";
 const sortLabel: Record<JobSortField, string> = { createdAt: "Date added", applicationDate: "Application date", company: "Company", status: "Status" };
 
@@ -26,32 +26,39 @@ const Pill = ({ s }: { s: ApplicationStatus }) => <span className={cn("inline-fl
 const fmtDate = (d: string) => new Date(`${d.slice(0, 10)}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 const errMsg = (e: unknown) => (e instanceof ApiError ? (e.status === 404 ? "Application not found. It may have been deleted." : e.message) : "Something went wrong. Please try again.");
 
-function useDebounced(value: string, ms = 350) {
-  const [v, setV] = useState(value);
-  useEffect(() => { const t = setTimeout(() => setV(value.trim()), ms); return () => clearTimeout(t); }, [value, ms]);
-  return v;
-}
+type TextKey = "search" | "company" | "role" | "source";
+interface JobQuery { search: string; company: string; role: string; source: string; status: ApplicationStatus | undefined; page: number; size: number; sortBy: JobSortField; direction: SortDirection }
+const EMPTY_TEXT: Record<TextKey, string> = { search: "", company: "", role: "", source: "" };
+const INITIAL: JobQuery = { ...EMPTY_TEXT, status: undefined, page: 0, size: PAGE_SIZE, sortBy: "createdAt", direction: "desc" };
+const DEBOUNCE_MS = 400;
 
 export function JobsPage() {
   const qc = useQueryClient();
-  const [searchInput, setSearchInput] = useState("");
-  const [companyInput, setCompanyInput] = useState("");
-  const [roleInput, setRoleInput] = useState("");
-  const [sourceInput, setSourceInput] = useState("");
-  const [status, setStatus] = useState<ApplicationStatus | undefined>();
-  const [sortBy, setSortBy] = useState<JobSortField>("createdAt");
-  const [direction, setDirection] = useState<SortDirection>("desc");
-  const [page, setPage] = useState(0);
+  // Single source of truth for the request. Text boxes keep a local draft that is committed (trimmed, page reset) after a debounce.
+  const [query, setQuery] = useState<JobQuery>(INITIAL);
+  const [draft, setDraft] = useState<Record<TextKey, string>>(EMPTY_TEXT);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<JobApplication | null>(null);
   const [deleting, setDeleting] = useState<JobApplication | null>(null);
   const [interviewsFor, setInterviewsFor] = useState<JobApplication | null>(null);
 
-  const search = useDebounced(searchInput), company = useDebounced(companyInput), role = useDebounced(roleInput), source = useDebounced(sourceInput);
-  useEffect(() => { setPage(0); }, [search, company, role, source, status, sortBy, direction]);
+  useEffect(() => {
+    const t = setTimeout(() => setQuery((q) => {
+      const next = { search: draft.search.trim(), company: draft.company.trim(), role: draft.role.trim(), source: draft.source.trim() };
+      const changed = (Object.keys(next) as TextKey[]).some((k) => next[k] !== q[k]);
+      return changed ? { ...q, ...next, page: 0 } : q;
+    }), DEBOUNCE_MS);
+    return () => clearTimeout(t);
+  }, [draft]);
 
-  const list = useQuery(jobQueries.list({ search, company, role, source, status, sortBy, direction, page, size: PAGE_SIZE }));
-  const hasFilters = !!(searchInput || companyInput || roleInput || sourceInput || status);
+  /** Any non-page change resets to page 0 in the same update, so no request is ever sent with new filters on an old page. */
+  const update = (patch: Partial<Omit<JobQuery, "page">>) => setQuery((q) => ({ ...q, ...patch, page: 0 }));
+  const setPage = (page: number) => setQuery((q) => ({ ...q, page }));
+  const setText = (k: TextKey, v: string) => setDraft((d) => ({ ...d, [k]: v }));
+  const { status, sortBy, direction, page } = query;
+
+  const list = useQuery(jobQueries.list(query));
+  const hasFilters = !!(draft.search || draft.company || draft.role || draft.source || status);
 
   // Invalidating analytics makes the Dashboard refetch on next visit.
   const refresh = () => Promise.all([qc.invalidateQueries({ queryKey: jobQueries.all }), qc.invalidateQueries({ queryKey: ["analytics"] })]);
@@ -81,7 +88,7 @@ export function JobsPage() {
   });
 
   const openAdd = () => { setEditing(null); setFormOpen(true); };
-  const clearFilters = () => { setSearchInput(""); setCompanyInput(""); setRoleInput(""); setSourceInput(""); setStatus(undefined); };
+  const clearFilters = () => { setDraft(EMPTY_TEXT); update({ ...EMPTY_TEXT, status: undefined }); };
   const rows = list.data?.content;
 
   const RowActions = ({ j }: { j: JobApplication }) => <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" aria-label={`Actions for ${j.company}`} disabled={changeStatus.isPending && changeStatus.variables?.id === j.id}><MoreHorizontal /></Button></DropdownMenuTrigger><DropdownMenuContent align="end">
@@ -98,14 +105,14 @@ export function JobsPage() {
     <PageHeader title="Job Applications" description="Manage every opportunity and interview stage in one clear pipeline." action={<Button onClick={openAdd}><Plus />Add application</Button>} />
 
     <Card><CardContent className="space-y-3 p-4">
-      <div className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search applications" placeholder="Search company, role, notes…" className="pl-9" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} /></div>
+      <div className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search applications" placeholder="Search company, role, notes…" className="pl-9" value={draft.search} onChange={(e) => setText("search", e.target.value)} /></div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_160px_180px_auto_auto]">
-        <Input aria-label="Filter by company" placeholder="Company" value={companyInput} onChange={(e) => setCompanyInput(e.target.value)} />
-        <Input aria-label="Filter by role" placeholder="Role" value={roleInput} onChange={(e) => setRoleInput(e.target.value)} />
-        <Input aria-label="Filter by source" placeholder="Source" value={sourceInput} onChange={(e) => setSourceInput(e.target.value)} />
-        <Select value={status ?? ALL} onValueChange={(v) => setStatus(v === ALL ? undefined : (v as ApplicationStatus))}><SelectTrigger aria-label="Status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>All statuses</SelectItem>{APPLICATION_STATUSES.map((s) => <SelectItem key={s} value={s}>{jobLabel(s)}</SelectItem>)}</SelectContent></Select>
-        <Select value={sortBy} onValueChange={(v) => setSortBy(v as JobSortField)}><SelectTrigger aria-label="Sort by"><SelectValue /></SelectTrigger><SelectContent>{JOB_SORT_FIELDS.map((f) => <SelectItem key={f} value={f}>Sort: {sortLabel[f]}</SelectItem>)}</SelectContent></Select>
-        <Button variant="outline" onClick={() => setDirection(direction === "asc" ? "desc" : "asc")} aria-label={`Sort direction: ${direction === "asc" ? "ascending" : "descending"}`}><ArrowDownUp />{direction === "asc" ? "Asc" : "Desc"}</Button>
+        <Input aria-label="Filter by company" placeholder="Company" value={draft.company} onChange={(e) => setText("company", e.target.value)} />
+        <Input aria-label="Filter by role" placeholder="Role" value={draft.role} onChange={(e) => setText("role", e.target.value)} />
+        <Input aria-label="Filter by source" placeholder="Source" value={draft.source} onChange={(e) => setText("source", e.target.value)} />
+        <Select value={status ?? ALL} onValueChange={(v) => update({ status: v === ALL ? undefined : (v as ApplicationStatus) })}><SelectTrigger aria-label="Status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>All statuses</SelectItem>{APPLICATION_STATUSES.map((s) => <SelectItem key={s} value={s}>{jobLabel(s)}</SelectItem>)}</SelectContent></Select>
+        <Select value={sortBy} onValueChange={(v) => update({ sortBy: v as JobSortField })}><SelectTrigger aria-label="Sort by"><SelectValue /></SelectTrigger><SelectContent>{JOB_SORT_FIELDS.map((f) => <SelectItem key={f} value={f}>Sort: {sortLabel[f]}</SelectItem>)}</SelectContent></Select>
+        <Button variant="outline" onClick={() => update({ direction: direction === "asc" ? "desc" : "asc" })} aria-label={`Sort direction: ${direction === "asc" ? "ascending" : "descending"}`}><ArrowDownUp />{direction === "asc" ? "Asc" : "Desc"}</Button>
         {hasFilters && <Button variant="ghost" onClick={clearFilters}><X />Clear</Button>}
       </div>
     </CardContent></Card>
