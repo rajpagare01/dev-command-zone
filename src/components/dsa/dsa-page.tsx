@@ -57,7 +57,7 @@ export function DsaPage() {
   const refresh = () => Promise.all([qc.invalidateQueries({ queryKey: dsaQueries.all }), qc.invalidateQueries({ queryKey: ["analytics"] })]);
 
   const save = useMutation({
-    mutationFn: ({ id, data }: { id?: number; data: DsaProblemRequest }) => (id ? updateDsaProblem(id, data) : createDsaProblem(data)),
+    mutationFn: ({ id, data }: { id?: number | undefined; data: DsaProblemRequest }) => (id ? updateDsaProblem(id, data) : createDsaProblem(data)),
     onSuccess: async (_d, { id }) => { toast.success(id ? "Problem updated" : "Problem added"); setFormOpen(false); await refresh(); },
     onError: (e) => { if (!(e instanceof ApiError && e.fieldErrors && Object.keys(e.fieldErrors).length)) toast.error(errMsg(e)); else toast.error("Please fix the highlighted fields."); },
   });
@@ -122,6 +122,6 @@ export function DsaPage() {
 
     <DsaFormDialog open={formOpen} onOpenChange={setFormOpen} problem={editing} onSubmit={async (d) => { await save.mutateAsync({ id: editing?.id, data: d }); }} />
 
-    <AlertDialog open={!!deleting} onOpenChange={(o) => !o && !remove.isPending && setDeleting(null)}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete this problem?</AlertDialogTitle><AlertDialogDescription>“{deleting?.title}” will be permanently removed. This can’t be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel disabled={remove.isPending}>Cancel</AlertDialogCancel><AlertDialogAction disabled={remove.isPending} className="bg-danger text-danger-foreground hover:bg-danger/90" onClick={(e) => { e.preventDefault(); if (deleting) remove.mutate(deleting.id); }}>{remove.isPending ? "Deleting…" : "Delete"}</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+    <AlertDialog open={!!deleting} onOpenChange={(o) => !o && !remove.isPending && setDeleting(null)}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete this problem?</AlertDialogTitle><AlertDialogDescription>“{deleting?.title}” will be permanently removed. This can’t be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel disabled={remove.isPending}>Cancel</AlertDialogCancel><AlertDialogAction disabled={remove.isPending} className="bg-danger text-foreground hover:bg-danger/90" onClick={(e) => { e.preventDefault(); if (deleting) remove.mutate(deleting.id); }}>{remove.isPending ? "Deleting…" : "Delete"}</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
   </div>;
 }

@@ -39,10 +39,10 @@ export interface DsaProblemRequest {
 }
 
 export interface DsaListParams {
-  topic?: string;
-  platform?: string;
-  difficulty?: DsaDifficulty;
-  status?: DsaStatus;
+  topic?: string | undefined;
+  platform?: string | undefined;
+  difficulty?: DsaDifficulty | undefined;
+  status?: DsaStatus | undefined;
   page: number;
   size: number;
   sortBy: DsaSortField;
