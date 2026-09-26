@@ -88,7 +88,7 @@ export function JobsPage() {
   });
 
   const openAdd = () => { setEditing(null); setFormOpen(true); };
-  const clearFilters = () => { setSearchInput(""); setCompanyInput(""); setRoleInput(""); setSourceInput(""); setStatus(undefined); };
+  const clearFilters = () => { setDraft(EMPTY_TEXT); update({ ...EMPTY_TEXT, status: undefined }); };
   const rows = list.data?.content;
 
   const RowActions = ({ j }: { j: JobApplication }) => <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" aria-label={`Actions for ${j.company}`} disabled={changeStatus.isPending && changeStatus.variables?.id === j.id}><MoreHorizontal /></Button></DropdownMenuTrigger><DropdownMenuContent align="end">
@@ -105,14 +105,14 @@ export function JobsPage() {
     <PageHeader title="Job Applications" description="Manage every opportunity and interview stage in one clear pipeline." action={<Button onClick={openAdd}><Plus />Add application</Button>} />
 
     <Card><CardContent className="space-y-3 p-4">
-      <div className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search applications" placeholder="Search company, role, notes…" className="pl-9" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} /></div>
+      <div className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search applications" placeholder="Search company, role, notes…" className="pl-9" value={draft.search} onChange={(e) => setText("search", e.target.value)} /></div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_160px_180px_auto_auto]">
-        <Input aria-label="Filter by company" placeholder="Company" value={companyInput} onChange={(e) => setCompanyInput(e.target.value)} />
-        <Input aria-label="Filter by role" placeholder="Role" value={roleInput} onChange={(e) => setRoleInput(e.target.value)} />
-        <Input aria-label="Filter by source" placeholder="Source" value={sourceInput} onChange={(e) => setSourceInput(e.target.value)} />
-        <Select value={status ?? ALL} onValueChange={(v) => setStatus(v === ALL ? undefined : (v as ApplicationStatus))}><SelectTrigger aria-label="Status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>All statuses</SelectItem>{APPLICATION_STATUSES.map((s) => <SelectItem key={s} value={s}>{jobLabel(s)}</SelectItem>)}</SelectContent></Select>
-        <Select value={sortBy} onValueChange={(v) => setSortBy(v as JobSortField)}><SelectTrigger aria-label="Sort by"><SelectValue /></SelectTrigger><SelectContent>{JOB_SORT_FIELDS.map((f) => <SelectItem key={f} value={f}>Sort: {sortLabel[f]}</SelectItem>)}</SelectContent></Select>
-        <Button variant="outline" onClick={() => setDirection(direction === "asc" ? "desc" : "asc")} aria-label={`Sort direction: ${direction === "asc" ? "ascending" : "descending"}`}><ArrowDownUp />{direction === "asc" ? "Asc" : "Desc"}</Button>
+        <Input aria-label="Filter by company" placeholder="Company" value={draft.company} onChange={(e) => setText("company", e.target.value)} />
+        <Input aria-label="Filter by role" placeholder="Role" value={draft.role} onChange={(e) => setText("role", e.target.value)} />
+        <Input aria-label="Filter by source" placeholder="Source" value={draft.source} onChange={(e) => setText("source", e.target.value)} />
+        <Select value={status ?? ALL} onValueChange={(v) => update({ status: v === ALL ? undefined : (v as ApplicationStatus) })}><SelectTrigger aria-label="Status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>All statuses</SelectItem>{APPLICATION_STATUSES.map((s) => <SelectItem key={s} value={s}>{jobLabel(s)}</SelectItem>)}</SelectContent></Select>
+        <Select value={sortBy} onValueChange={(v) => update({ sortBy: v as JobSortField })}><SelectTrigger aria-label="Sort by"><SelectValue /></SelectTrigger><SelectContent>{JOB_SORT_FIELDS.map((f) => <SelectItem key={f} value={f}>Sort: {sortLabel[f]}</SelectItem>)}</SelectContent></Select>
+        <Button variant="outline" onClick={() => update({ direction: direction === "asc" ? "desc" : "asc" })} aria-label={`Sort direction: ${direction === "asc" ? "ascending" : "descending"}`}><ArrowDownUp />{direction === "asc" ? "Asc" : "Desc"}</Button>
         {hasFilters && <Button variant="ghost" onClick={clearFilters}><X />Clear</Button>}
       </div>
     </CardContent></Card>
