@@ -26,7 +26,7 @@ export function SettingsPage() {
         <SettingRow icon={KeyRound} label="Authentication" value="JWT bearer session managed securely by DevCommand" status={isAuthenticated ? "Active" : undefined} />
       </CardContent></Card>
       <Card><CardHeader><CardTitle>Workspace</CardTitle><p className="text-sm text-muted-foreground">Current frontend environment and connection state.</p></CardHeader><CardContent>
-        <SettingRow icon={Server} label="Spring Boot API" value="Configured through the workspace environment" status="Configured" />
+        <SettingRow icon={Server} label="Spring Boot API" value="Requests use the centralized authenticated client" status="Configured" />
         <SettingRow icon={MonitorCog} label="Appearance" value="Dark workspace theme" status="Active" />
         <div className="mt-5 rounded-md border border-border bg-surface-subtle p-4"><p className="text-sm font-medium">Preferences stay intentional</p><p className="mt-1 text-xs leading-5 text-muted-foreground">Additional preferences will appear here only when backend support exists. Nothing on this page pretends to save unsupported settings.</p></div>
       </CardContent></Card>
