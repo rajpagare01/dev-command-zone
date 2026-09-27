@@ -113,7 +113,7 @@ export function InterviewRoundsDialog({ job, onOpenChange }: { job: JobApplicati
           {r.notes && <p className="mt-1 text-sm"><span className="text-muted-foreground">Notes: </span>{r.notes}</p>}
         </li>)}</ul>}
 
-      {deleting && <div role="alertdialog" aria-label="Confirm delete" className="flex flex-col gap-3 rounded-md border border-danger/30 bg-danger/5 p-4 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm">Delete round {deleting.roundNumber} ({deleting.roundType})? This can’t be undone.</p><div className="flex gap-2"><Button size="sm" variant="outline" disabled={remove.isPending} onClick={() => setDeleting(null)}>Cancel</Button><Button size="sm" className="bg-danger text-foreground hover:bg-danger/90" disabled={remove.isPending} onClick={() => remove.mutate(deleting.id)}>{remove.isPending ? "Deleting…" : "Delete"}</Button></div></div>}
+      {deleting && <div role="alertdialog" aria-label="Confirm delete" className="flex flex-col gap-3 rounded-md border border-danger/30 bg-danger/5 p-4 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm">Delete round {deleting.roundNumber} ({deleting.roundType})? This can’t be undone.</p><div className="flex gap-2"><Button size="sm" variant="outline" disabled={remove.isPending} onClick={() => setDeleting(null)}>Cancel</Button><Button size="sm" className="bg-destructive text-destructive-foreground hover:bg-destructive/90" disabled={remove.isPending} onClick={() => remove.mutate(deleting.id)}>{remove.isPending ? "Deleting…" : "Delete"}</Button></div></div>}
 
       {mode === "list" && sorted.length > 0 && <DialogFooter><Button onClick={() => setMode("add")}><Plus />Add interview round</Button></DialogFooter>}
     </DialogContent>
