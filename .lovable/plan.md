@@ -3,6 +3,14 @@
 ## Goal
 Polish the existing product into one cohesive, production-quality dark developer command center without changing routes, API contracts, authentication, data behavior, or backend ownership rules.
 
+## Design direction: Calm Developer Workspace
+- Use Linear, GitHub, Vercel, Raycast, Notion, and modern IDEs only as quality references—not templates to copy.
+- Keep near-black neutral surfaces, subtle borders, crisp sans-serif hierarchy, restrained 6–10px radii, one sparingly used indigo accent, and controlled semantic colors.
+- Prefer spacing, typography, alignment, and contrast over gradients, glow, glass, shadows, animation, decorative icons, and excessive cards.
+- Optimize every page for fast daily scanning: actionable information first, compact metadata second, predictable controls, and no screenshot-only decoration.
+- Group navigation into Work, Insights, and System while preserving every current destination.
+- Make tables feel like developer tooling, forms visibly grouped by purpose, dialogs focused, and mobile layouts intentionally stacked rather than shrunken desktop screens.
+
 ## Implementation
 1. **Shared visual foundation**
    - Refine semantic color, surface, border, shadow, typography, spacing, radius, focus, and motion tokens.
