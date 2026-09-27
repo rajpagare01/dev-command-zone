@@ -23,7 +23,7 @@ export function SettingsPage() {
       <Card><CardHeader><CardTitle>Account</CardTitle><p className="text-sm text-muted-foreground">Identity provided by your authenticated session.</p></CardHeader><CardContent>
         <div className="flex min-w-0 items-center gap-4 border-b border-border pb-5"><Avatar className="size-11 shrink-0"><AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback></Avatar><div className="min-w-0"><p className="truncate font-display font-semibold">{name}</p><p className="truncate text-sm text-muted-foreground">{email}</p></div></div>
         <SettingRow icon={CircleUserRound} label="Display name" value={name} />
-        <SettingRow icon={KeyRound} label="Authentication" value="JWT bearer session managed securely by DevCommand" status={isAuthenticated ? "Active" : undefined} />
+        <SettingRow icon={KeyRound} label="Authentication" value="JWT bearer session managed securely by DevCommand" {...(isAuthenticated ? { status: "Active" } : {})} />
       </CardContent></Card>
       <Card><CardHeader><CardTitle>Workspace</CardTitle><p className="text-sm text-muted-foreground">Current frontend environment and connection state.</p></CardHeader><CardContent>
         <SettingRow icon={Server} label="Spring Boot API" value="Requests use the centralized authenticated client" status="Configured" />
