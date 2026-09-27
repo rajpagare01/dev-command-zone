@@ -120,15 +120,15 @@ export function LearningPage() {
       {TABS.map((t) => <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)} className={cn("rounded px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", tab === t.id ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground")}>{t.label}</button>)}
     </div>
 
-    {tab === "all" && <Card><CardContent className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_160px_150px_110px_150px_auto_auto]">
-      <div className="relative sm:col-span-2 lg:col-span-1"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search technology or topic" placeholder="Search technology or topic" className="pl-9" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} /></div>
+    {tab === "all" && <Card><CardContent className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_160px_150px_110px_150px_auto_auto]">
+      <div className="relative sm:col-span-2 xl:col-span-1"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search technology or topic" placeholder="Search technology or topic" className="pl-9" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} /></div>
       <Input aria-label="Technology" placeholder="Technology (exact)" value={techInput} onChange={(e) => setTechInput(e.target.value)} />
       <Select value={status ?? ALL} onValueChange={(v) => setStatus(v === ALL ? undefined : (v as LearningStatus))}><SelectTrigger aria-label="Status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>All statuses</SelectItem>{LEARNING_STATUSES.map((s) => <SelectItem key={s} value={s}>{statusLabel[s]}</SelectItem>)}</SelectContent></Select>
       <Input aria-label="Progress (exact %)" placeholder="Progress %" type="number" min={0} max={100} value={progressInput} onChange={(e) => setProgressInput(e.target.value)} aria-invalid={progressInvalid} />
       <Select value={sortBy} onValueChange={(v) => setSortBy(v as LearningSortField)}><SelectTrigger aria-label="Sort by"><SelectValue /></SelectTrigger><SelectContent>{LEARNING_SORT_FIELDS.map((f) => <SelectItem key={f} value={f}>{sortLabel[f]}</SelectItem>)}</SelectContent></Select>
       <Button variant="outline" onClick={() => setDirection((d) => (d === "asc" ? "desc" : "asc"))} aria-label={`Sort direction: ${direction === "asc" ? "ascending" : "descending"}`}>{direction === "asc" ? <ArrowUpNarrowWide /> : <ArrowDownWideNarrow />}{direction === "asc" ? "Asc" : "Desc"}</Button>
       {hasFilters && <Button variant="ghost" onClick={clearFilters}><X />Clear</Button>}
-      {progressInvalid && <p className="text-xs text-danger sm:col-span-2 lg:col-span-7">Progress filter must be a whole number from 0 to 100.</p>}
+      {progressInvalid && <p className="text-xs text-danger sm:col-span-2 xl:col-span-7">Progress filter must be a whole number from 0 to 100.</p>}
     </CardContent></Card>}
 
     <Card><CardContent className="p-0">
