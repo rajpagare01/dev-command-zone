@@ -120,15 +120,15 @@ export function LearningPage() {
       {TABS.map((t) => <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)} className={cn("rounded px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", tab === t.id ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground")}>{t.label}</button>)}
     </div>
 
-    {tab === "all" && <Card><CardContent className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_160px_150px_110px_150px_auto_auto]">
-      <div className="relative sm:col-span-2 lg:col-span-1"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search technology or topic" placeholder="Search technology or topic" className="pl-9" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} /></div>
+    {tab === "all" && <Card><CardContent className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_160px_150px_110px_150px_auto_auto]">
+      <div className="relative sm:col-span-2 xl:col-span-1"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search technology or topic" placeholder="Search technology or topic" className="pl-9" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} /></div>
       <Input aria-label="Technology" placeholder="Technology (exact)" value={techInput} onChange={(e) => setTechInput(e.target.value)} />
       <Select value={status ?? ALL} onValueChange={(v) => setStatus(v === ALL ? undefined : (v as LearningStatus))}><SelectTrigger aria-label="Status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>All statuses</SelectItem>{LEARNING_STATUSES.map((s) => <SelectItem key={s} value={s}>{statusLabel[s]}</SelectItem>)}</SelectContent></Select>
       <Input aria-label="Progress (exact %)" placeholder="Progress %" type="number" min={0} max={100} value={progressInput} onChange={(e) => setProgressInput(e.target.value)} aria-invalid={progressInvalid} />
       <Select value={sortBy} onValueChange={(v) => setSortBy(v as LearningSortField)}><SelectTrigger aria-label="Sort by"><SelectValue /></SelectTrigger><SelectContent>{LEARNING_SORT_FIELDS.map((f) => <SelectItem key={f} value={f}>{sortLabel[f]}</SelectItem>)}</SelectContent></Select>
       <Button variant="outline" onClick={() => setDirection((d) => (d === "asc" ? "desc" : "asc"))} aria-label={`Sort direction: ${direction === "asc" ? "ascending" : "descending"}`}>{direction === "asc" ? <ArrowUpNarrowWide /> : <ArrowDownWideNarrow />}{direction === "asc" ? "Asc" : "Desc"}</Button>
       {hasFilters && <Button variant="ghost" onClick={clearFilters}><X />Clear</Button>}
-      {progressInvalid && <p className="text-xs text-danger sm:col-span-2 lg:col-span-7">Progress filter must be a whole number from 0 to 100.</p>}
+      {progressInvalid && <p className="text-xs text-danger sm:col-span-2 xl:col-span-7">Progress filter must be a whole number from 0 to 100.</p>}
     </CardContent></Card>}
 
     <Card><CardContent className="p-0">
@@ -137,7 +137,7 @@ export function LearningPage() {
       : q.isError ? <div role="alert" className="flex flex-col items-center gap-3 p-10 text-center"><AlertCircle className="size-6 text-danger" /><p className="text-sm text-muted-foreground">{errMsg(q.error)}</p><Button size="sm" variant="outline" onClick={() => void q.refetch()}><RotateCw />Retry</Button></div>
       : rows && rows.length === 0 ? <div className="flex flex-col items-center gap-3 p-12 text-center"><span className="grid size-12 place-items-center rounded-lg border border-primary/20 bg-primary/10 text-primary"><GraduationCap className="size-6" /></span><p className="font-display font-semibold">{filtering ? "No topics match these filters" : emptyText[tab]}</p>{filtering ? <Button variant="outline" onClick={clearFilters}>Clear filters</Button> : <Button onClick={openAdd}><Plus />Add topic</Button>}</div>
       : rows && <div className={cn("transition-opacity", q.isFetching && "opacity-60")}>
-        <div className="hidden overflow-x-auto md:block"><table className="w-full text-sm"><thead><tr className="border-b border-border text-left text-xs uppercase text-muted-foreground">{["Topic", "Progress", "Status", "Hours", ""].map((h) => <th key={h} className="px-4 py-3 font-medium">{h}</th>)}</tr></thead>
+        <div className="hidden overflow-x-auto md:block"><table className="data-table w-full text-sm"><thead><tr className="border-b border-border text-left text-xs uppercase text-muted-foreground">{["Topic", "Progress", "Status", "Hours", ""].map((h) => <th key={h} className="px-4 py-3 font-medium">{h}</th>)}</tr></thead>
           <tbody>{rows.map((t) => <tr key={t.id} className="border-b border-border last:border-0 hover:bg-surface-subtle">
             <td className="max-w-md px-4 py-3"><Title t={t} /></td><td className="px-4 py-3"><Bar t={t} /></td>
             <td className="px-4 py-3"><Pill className={statusTone[t.status]}>{statusLabel[t.status]}</Pill></td><td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{hours(t.hoursSpent)}</td>
@@ -152,6 +152,6 @@ export function LearningPage() {
     <LearningFormDialog open={formOpen} onOpenChange={setFormOpen} topic={editing} onSubmit={async (d) => { await save.mutateAsync({ id: editing?.id, data: d }); }} />
     <ProgressDialog topic={progressing} onOpenChange={(o) => !o && setProgressing(null)} onSubmit={async (value) => { if (progressing) await setProgressM.mutateAsync({ id: progressing.id, value }); }} />
 
-    <AlertDialog open={!!deleting} onOpenChange={(o) => !o && !remove.isPending && setDeleting(null)}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete this topic?</AlertDialogTitle><AlertDialogDescription>“{deleting?.topic}” will be permanently removed. This can’t be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel disabled={remove.isPending}>Cancel</AlertDialogCancel><AlertDialogAction disabled={remove.isPending} className="bg-danger text-foreground hover:bg-danger/90" onClick={(e) => { e.preventDefault(); if (deleting) remove.mutate(deleting.id); }}>{remove.isPending ? "Deleting…" : "Delete"}</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+    <AlertDialog open={!!deleting} onOpenChange={(o) => !o && !remove.isPending && setDeleting(null)}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete this topic?</AlertDialogTitle><AlertDialogDescription>“{deleting?.topic}” will be permanently removed. This can’t be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel disabled={remove.isPending}>Cancel</AlertDialogCancel><AlertDialogAction disabled={remove.isPending} className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={(e) => { e.preventDefault(); if (deleting) remove.mutate(deleting.id); }}>{remove.isPending ? "Deleting…" : "Delete"}</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
   </div>;
 }

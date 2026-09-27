@@ -5,6 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { TooltipProps } from "recharts";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/common/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -43,7 +44,7 @@ function SectionCard({ title, subtitle, icon: Icon, tone, children }: { title: s
 }
 
 function KpiCard({ title, icon: Icon, tone, rows }: { title: string; icon: LucideIcon; tone: Tone; rows: { label: string; value: number }[] }) {
-  return <Card className="transition-all hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-card"><CardContent className="p-5">
+  return <Card className="transition-colors hover:border-foreground/15"><CardContent className="p-5">
     <div className="flex items-center gap-2.5"><span className={cn("grid size-9 place-items-center rounded-md", toneBg[tone])}><Icon className="size-4.5" /></span><p className="font-display font-semibold">{title}</p></div>
     <div className="mt-4 space-y-2">{rows.map((r) => <StatRow key={r.label} {...r} tone={tone} />)}</div>
   </CardContent></Card>;
@@ -109,12 +110,9 @@ export function AnalyticsPage() {
   const learningProgress = clampPct(learning.averageProgress);
 
   return <div className="space-y-6 animate-page-in">
-    <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div><h1 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">Analytics</h1><p className="mt-1.5 text-sm text-muted-foreground sm:text-base">Track your overall development progress and activity.</p></div>
-      <Button variant="outline" size="sm" onClick={() => void query.refetch()} disabled={query.isFetching}>
+    <PageHeader title="Analytics" description="Track your overall development progress and activity." action={<Button variant="outline" size="sm" onClick={() => void query.refetch()} disabled={query.isFetching}>
         <RotateCw className={cn("size-4", query.isFetching && "animate-spin")} />{query.isFetching ? "Refreshing…" : "Refresh"}
-      </Button>
-    </header>
+      </Button>} />
 
     <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Overview">
       {kpis.map((k) => <KpiCard key={k.title} {...k} />)}
