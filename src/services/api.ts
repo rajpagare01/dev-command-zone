@@ -1,7 +1,7 @@
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { authStorage } from "@/services/auth-storage";
 
-const API_URL = import.meta.env["VITE_API_URL"] ?? "http://localhost:8080";
+const API_URL = import.meta.env["VITE_API_URL"] ?? "https://devcommand.onrender.com";
 
 export interface ApiErrorDetails {
   status?: number;

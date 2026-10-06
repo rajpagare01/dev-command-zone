@@ -16,7 +16,7 @@ export function SystemStatus({ signals }: { signals: SyncSignal[] }) {
   const failures = signals.filter((signal) => signal.isError).length;
   const healthy = signals.every((signal) => signal.isSuccess);
   const lastSync = Math.max(0, ...signals.map((signal) => signal.dataUpdatedAt));
-  const backend = import.meta.env["VITE_API_URL"] ?? "http://localhost:8080";
+  const backend = import.meta.env["VITE_API_URL"] ?? "https://devcommand.onrender.com";
   let host = "Not configured";
   try { host = new URL(backend).host; } catch { /* Do not display invalid configuration. */ }
   const label = syncing ? "Syncing" : failures ? "Requests failed" : healthy ? "API responding" : "Not checked";
