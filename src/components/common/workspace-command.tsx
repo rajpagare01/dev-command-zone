@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { BarChart3, BriefcaseBusiness, CheckSquare2, Clock3, Code2, FolderKanban, GraduationCap, Keyboard, LayoutDashboard, RotateCw, Search, Settings, Star } from "lucide-react";
@@ -20,6 +20,7 @@ const destinations = [
 type Destination = (typeof destinations)[number];
 
 export const SHORTCUTS_TOGGLE_EVENT = "devcommand:toggle-shortcuts";
+export const SHORTCUTS_STATE_EVENT = "devcommand:shortcuts-state";
 const PREFS_KEY = "devcommand.palette";
 const MAX_RECENT = 5;
 interface PalettePrefs { recent: string[]; favorites: string[] }
@@ -57,6 +58,11 @@ export function WorkspaceCommand() {
   const client = useQueryClient();
 
   useEffect(() => { setPrefs(readPrefs()); }, []);
+  const returnFocus = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (helpOpen && document.activeElement instanceof HTMLElement) returnFocus.current = document.activeElement;
+    window.dispatchEvent(new CustomEvent(SHORTCUTS_STATE_EVENT, { detail: helpOpen }));
+  }, [helpOpen]);
   useEffect(() => {
     const toggle = () => { setOpen(false); setHelpOpen((v) => !v); };
     window.addEventListener(SHORTCUTS_TOGGLE_EVENT, toggle);
@@ -169,10 +175,17 @@ export function WorkspaceCommand() {
       </DialogContent>
     </Dialog>
     <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent
+        className="sm:max-w-md"
+        onCloseAutoFocus={(event) => {
+          const target = returnFocus.current;
+          if (target && target.isConnected) { event.preventDefault(); target.focus(); }
+          returnFocus.current = null;
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Keyboard shortcuts</DialogTitle>
-          <DialogDescription>Press G, then a letter within one second to jump between workspaces.</DialogDescription>
+          <DialogDescription>Press Escape, ? or click outside to close. Press G, then a letter within one second to jump between workspaces.</DialogDescription>
         </DialogHeader>
         <ul className="divide-y divide-border rounded-md border border-border">
           {shortcutRows.map((s) => (
