@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { completeTask, startTask, taskQueries } from "@/services/tasks";
 import type { DailyTask } from "@/types/tasks";
+import { useEffect, useState } from "react";
+import { SHORTCUTS_STATE_EVENT, SHORTCUTS_TOGGLE_EVENT } from "@/components/common/workspace-command";
 
 type SyncSignal = { isFetching: boolean; isError: boolean; isSuccess: boolean; dataUpdatedAt: number };
 
@@ -46,6 +48,7 @@ export function PriorityFocus({ solvedToday, dsaError, dsaPending }: { solvedTod
       <h2 className="font-display text-base font-semibold">Priority focus</h2>
       <div className="flex gap-2">
         {([{ to: "/dsa", label: "DSA", key: "D" }, { to: "/tasks", label: "Tasks", key: "T" }, { to: "/jobs", label: "Jobs", key: "J" }] as const).map((item) => <Button key={item.to} variant="ghost" size="sm" className="h-8 gap-2 px-2" asChild><Link to={item.to}>{item.label}<kbd className="rounded-sm border border-border px-1 font-mono text-[10px] text-muted-foreground">G {item.key}</kbd></Link></Button>)}
+        <ShortcutsToggle />
       </div>
     </div>
     <div className="divide-y divide-border border-y border-border">
@@ -61,4 +64,26 @@ export function PriorityFocus({ solvedToday, dsaError, dsaPending }: { solvedTod
       </div>
     </div>
   </section>;
+}
+function ShortcutsToggle() {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const sync = (event: Event) => setOpen(Boolean((event as CustomEvent<boolean>).detail));
+    window.addEventListener(SHORTCUTS_STATE_EVENT, sync);
+    return () => window.removeEventListener(SHORTCUTS_STATE_EVENT, sync);
+  }, []);
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="h-8 gap-2 px-2"
+      aria-label={open ? "Hide keyboard shortcuts" : "Show keyboard shortcuts"}
+      aria-pressed={open}
+      aria-haspopup="dialog"
+      aria-keyshortcuts="?"
+      onClick={(event) => { event.currentTarget.focus(); window.dispatchEvent(new Event(SHORTCUTS_TOGGLE_EVENT)); }}
+    >
+      Shortcuts<kbd aria-hidden="true" className="rounded-sm border border-border px-1 font-mono text-[10px] text-muted-foreground">?</kbd>
+    </Button>
+  );
 }
