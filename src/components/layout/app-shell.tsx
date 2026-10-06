@@ -31,6 +31,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils";
 import type { NavigationItem } from "@/types/devcommand";
 import { useAuth } from "@/context/auth-context";
+import { WorkspaceCommand } from "@/components/common/workspace-command";
 
 const nav: NavigationItem[] = [{ label: "Dashboard", path: "/dashboard", icon: LayoutDashboard }];
 const workNav: NavigationItem[] = [
@@ -212,6 +213,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </p>
             </div>
             <div className="ml-auto flex items-center gap-1">
+              <WorkspaceCommand />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="h-10 min-w-0 gap-2 px-2">

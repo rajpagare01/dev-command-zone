@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
 import { analyticsQueries } from "@/services/analytics";
+import { PriorityFocus, SystemStatus } from "@/components/dashboard/priority-focus";
 
 type Tone = "blue" | "green" | "amber" | "violet" | "red";
 const toneBg: Record<Tone, string> = {
@@ -216,6 +217,9 @@ export function DashboardContent() {
           {today}
         </div>
       </header>
+
+      <SystemStatus signals={[overview, dsa, tasks, jobs, learning, projects]} />
+      <PriorityFocus solvedToday={dsa.data?.solvedToday} dsaError={dsa.isError} dsaPending={dsa.isPending} />
 
       <div className="grid gap-6 xl:grid-cols-2">
         <Section
