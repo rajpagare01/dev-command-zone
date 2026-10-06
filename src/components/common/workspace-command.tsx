@@ -50,8 +50,8 @@ export function WorkspaceCommand() {
   }, [navigate, open]);
 
   return <>
-    <Button variant="outline" onClick={() => setOpen(true)} aria-label="Search commands and routes" aria-keyshortcuts="Meta+K Control+K" className="h-9 min-w-0 gap-2 bg-surface-subtle px-3 text-muted-foreground sm:w-64 sm:justify-start">
-      <Search className="size-4 shrink-0" /><span className="hidden sm:inline">Search commands…</span><kbd className="ml-auto hidden rounded-sm border border-border px-1.5 font-mono text-[10px] sm:inline">⌘K / Ctrl K</kbd>
+    <Button variant="outline" onClick={() => setOpen(true)} aria-label="Search commands and routes" aria-keyshortcuts="Meta+K Control+K" className="h-9 min-w-0 gap-2 bg-surface-subtle px-3 text-muted-foreground lg:w-64 lg:justify-start">
+      <Search className="size-4 shrink-0" /><span className="hidden lg:inline">Search commands…</span><kbd className="ml-auto hidden rounded-sm border border-border px-1.5 font-mono text-[10px] lg:inline">⌘K / Ctrl K</kbd>
     </Button>
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="overflow-hidden p-0 sm:max-w-xl">
