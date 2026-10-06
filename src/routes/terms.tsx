@@ -6,6 +6,10 @@ export const Route = createFileRoute("/terms")({
     meta: [
       { title: "Terms and Conditions - DevCommand" },
       { name: "description", content: "Terms and Conditions for DevCommand." },
+      { property: "og:title", content: "Terms and Conditions - DevCommand" },
+      { property: "og:description", content: "Terms and Conditions for DevCommand." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (

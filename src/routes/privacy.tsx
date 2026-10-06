@@ -6,6 +6,10 @@ export const Route = createFileRoute("/privacy")({
     meta: [
       { title: "Privacy Policy - DevCommand" },
       { name: "description", content: "Privacy Policy for DevCommand." },
+      { property: "og:title", content: "Privacy Policy - DevCommand" },
+      { property: "og:description", content: "Privacy Policy for DevCommand." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (
