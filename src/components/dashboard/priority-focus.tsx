@@ -81,7 +81,7 @@ function ShortcutsToggle() {
       aria-pressed={open}
       aria-haspopup="dialog"
       aria-keyshortcuts="?"
-      onClick={() => window.dispatchEvent(new Event(SHORTCUTS_TOGGLE_EVENT))}
+      onClick={(event) => { event.currentTarget.focus(); window.dispatchEvent(new Event(SHORTCUTS_TOGGLE_EVENT)); }}
     >
       Shortcuts<kbd aria-hidden="true" className="rounded-sm border border-border px-1 font-mono text-[10px] text-muted-foreground">?</kbd>
     </Button>
