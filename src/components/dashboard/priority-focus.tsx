@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { completeTask, startTask, taskQueries } from "@/services/tasks";
 import type { DailyTask } from "@/types/tasks";
+import { SHORTCUTS_TOGGLE_EVENT } from "@/components/common/workspace-command";
 
 type SyncSignal = { isFetching: boolean; isError: boolean; isSuccess: boolean; dataUpdatedAt: number };
 
@@ -46,6 +47,7 @@ export function PriorityFocus({ solvedToday, dsaError, dsaPending }: { solvedTod
       <h2 className="font-display text-base font-semibold">Priority focus</h2>
       <div className="flex gap-2">
         {([{ to: "/dsa", label: "DSA", key: "D" }, { to: "/tasks", label: "Tasks", key: "T" }, { to: "/jobs", label: "Jobs", key: "J" }] as const).map((item) => <Button key={item.to} variant="ghost" size="sm" className="h-8 gap-2 px-2" asChild><Link to={item.to}>{item.label}<kbd className="rounded-sm border border-border px-1 font-mono text-[10px] text-muted-foreground">G {item.key}</kbd></Link></Button>)}
+        <Button variant="ghost" size="sm" className="h-8 gap-2 px-2" aria-keyshortcuts="?" onClick={() => window.dispatchEvent(new Event(SHORTCUTS_TOGGLE_EVENT))}>Shortcuts<kbd className="rounded-sm border border-border px-1 font-mono text-[10px] text-muted-foreground">?</kbd></Button>
       </div>
     </div>
     <div className="divide-y divide-border border-y border-border">

@@ -19,6 +19,7 @@ const destinations = [
 ] as const;
 type Destination = (typeof destinations)[number];
 
+export const SHORTCUTS_TOGGLE_EVENT = "devcommand:toggle-shortcuts";
 const PREFS_KEY = "devcommand.palette";
 const MAX_RECENT = 5;
 interface PalettePrefs { recent: string[]; favorites: string[] }
@@ -41,7 +42,7 @@ const shortcutRows = [
   { keys: ["G", "D"], label: "Go to DSA" },
   { keys: ["G", "T"], label: "Go to Tasks" },
   { keys: ["G", "J"], label: "Go to Jobs" },
-  { keys: ["?"], label: "Show keyboard shortcuts" },
+  { keys: ["?"], label: "Open or close this help" },
 ];
 
 function Keys({ keys }: { keys: string[] }) {
@@ -56,6 +57,11 @@ export function WorkspaceCommand() {
   const client = useQueryClient();
 
   useEffect(() => { setPrefs(readPrefs()); }, []);
+  useEffect(() => {
+    const toggle = () => { setOpen(false); setHelpOpen((v) => !v); };
+    window.addEventListener(SHORTCUTS_TOGGLE_EVENT, toggle);
+    return () => window.removeEventListener(SHORTCUTS_TOGGLE_EVENT, toggle);
+  }, []);
   const update = useCallback((fn: (p: PalettePrefs) => PalettePrefs) => {
     setPrefs((current) => {
       const next = fn(current);
@@ -83,6 +89,11 @@ export function WorkspaceCommand() {
         return;
       }
       const target = event.target;
+      if (event.key === "?" && helpOpen) {
+        event.preventDefault();
+        setHelpOpen(false);
+        return;
+      }
       if (open || helpOpen || event.metaKey || event.ctrlKey || event.altKey || (target instanceof HTMLElement && target.closest("input,textarea,select,[contenteditable=true],[role=dialog],[role=combobox]"))) {
         prefixAt = 0;
         return;
