@@ -150,25 +150,24 @@ APPLICATION LAYOUT
 Create the main authenticated application layout:
 
 ┌─────────────────────────────────────────────────────────────┐
-│ DevCommand                           Search   🔔   👤 Raj   │
+│ DevCommand Search 🔔 👤 Raj │
 ├───────────────┬─────────────────────────────────────────────┤
-│               │                                             │
-│ 🏠 Dashboard  │                                             │
-│               │                                             │
-│ 🧩 DSA        │                                             │
-│ 💼 Jobs       │              Main Content                    │
-│ 📚 Learning   │                                             │
-│ 🚀 Projects   │                                             │
-│ ✅ Tasks      │                                             │
-│ 📊 Analytics  │                                             │
-│               │                                             │
-│ ───────────── │                                             │
-│ ⚙ Settings   │                                             │
-│               │                                             │
-│               │                                             │
-│ Raj Pagare    │                                             │
+│ │ │
+│ 🏠 Dashboard │ │
+│ │ │
+│ 🧩 DSA │ │
+│ 💼 Jobs │ Main Content │
+│ 📚 Learning │ │
+│ 🚀 Projects │ │
+│ ✅ Tasks │ │
+│ 📊 Analytics │ │
+│ │ │
+│ ───────────── │ │
+│ ⚙ Settings │ │
+│ │ │
+│ │ │
+│ Raj Pagare │ │
 └───────────────┴─────────────────────────────────────────────┘
-
 
 Sidebar should support:
 
@@ -209,13 +208,11 @@ Create these routes:
 /analytics
 /settings
 
-
 Only fully design these pages initially:
 
 /login
 /register
 /dashboard
-
 
 For the other pages, create polished placeholder screens showing:
 
@@ -273,11 +270,10 @@ Email
 Password
 [________________]
 
-[        Login        ]
+[ Login ]
 
 Don't have an account?
 Create one
-
 
 Add proper client-side validation.
 
@@ -315,7 +311,6 @@ Good evening, Raj 👋
 
 Here's your development activity at a glance.
 
-
 Add a date indicator.
 
 KPI CARDS
@@ -329,14 +324,12 @@ DSA Problems
 127
 +8 this week
 
-
 Jobs
 
 💼
 Applications
 23
 +4 this week
-
 
 Learning
 
@@ -345,14 +338,12 @@ Learning Hours
 42h
 +8h this week
 
-
 Tasks
 
 ✅
 Tasks Completed
 84%
 +12% this week
-
 
 These are currently presentation-only values.
 
@@ -368,7 +359,6 @@ Today's Focus
 ☐ Revise Spring Security
 ☐ Work on DevCommand
 ☐ Apply to 2 Java roles
-
 
 Include:
 
@@ -390,11 +380,10 @@ Example:
 
 Recent DSA Activity
 
-Two Sum                    Easy      Solved
-Valid Parentheses          Easy      Solved
-LRU Cache                  Medium    Revision
-Binary Tree Inorder        Easy      Solved
-
+Two Sum Easy Solved
+Valid Parentheses Easy Solved
+LRU Cache Medium Revision
+Binary Tree Inorder Easy Solved
 
 Add a small weekly activity visualization.
 
@@ -406,12 +395,11 @@ LEARNING PROGRESS
 
 Create cards/progress bars for:
 
-Java             90%
-Spring Boot      72%
-Docker           54%
-System Design    38%
-PostgreSQL       65%
-
+Java 90%
+Spring Boot 72%
+Docker 54%
+System Design 38%
+PostgreSQL 65%
 
 Again, these are temporary presentation values.
 
@@ -421,12 +409,11 @@ Create a compact visualization:
 
 Job Applications
 
-Applied       23
-Screening      6
-Interview      4
-Offer          1
-Rejected       9
-
+Applied 23
+Screening 6
+Interview 4
+Offer 1
+Rejected 9
 
 Use visually distinct status badges.
 
@@ -450,19 +437,17 @@ SafeRoute
 Spring Boot · Python · PostgreSQL
 █████████░░░░ 71%
 
-
 Use cards with technology badges.
 
 QUICK ACTIONS
 
 Create a quick-actions section:
 
-+ Add DSA Problem
-+ Add Job Application
-+ Add Learning Topic
-+ Add Task
-+ Add Project
-
+- Add DSA Problem
+- Add Job Application
+- Add Learning Topic
+- Add Task
+- Add Project
 
 These buttons can initially display a "Coming soon" state.
 
@@ -477,7 +462,6 @@ DSA Tracker
 Track every problem you solve and build consistent problem-solving habits.
 
 Coming next.
-
 
 Include navigation and page structure that will later support:
 
@@ -661,21 +645,21 @@ Suggested structure:
 
 src/
 ├── components/
-│   ├── ui/
-│   ├── layout/
-│   ├── dashboard/
-│   └── common/
+│ ├── ui/
+│ ├── layout/
+│ ├── dashboard/
+│ └── common/
 │
 ├── pages/
-│   ├── auth/
-│   ├── dashboard/
-│   ├── dsa/
-│   ├── jobs/
-│   ├── learning/
-│   ├── projects/
-│   ├── tasks/
-│   ├── analytics/
-│   └── settings/
+│ ├── auth/
+│ ├── dashboard/
+│ ├── dsa/
+│ ├── jobs/
+│ ├── learning/
+│ ├── projects/
+│ ├── tasks/
+│ ├── analytics/
+│ └── settings/
 │
 ├── layouts/
 ├── services/
@@ -684,7 +668,6 @@ src/
 ├── types/
 ├── utils/
 └── routes/
-
 
 Use TypeScript types instead of excessive any.
 
@@ -696,18 +679,15 @@ Java 23
 Spring Boot
 PostgreSQL
 
-
 Backend base URL will eventually be:
 
 http://localhost:8080
-
 
 Prepare an API service layer so the UI doesn't directly make fetch requests everywhere.
 
 Use an environment variable such as:
 
 VITE_API_URL
-
 
 Do NOT connect to a fake backend.
 
@@ -726,7 +706,6 @@ The Spring Boot backend will expose:
 POST /api/auth/register
 POST /api/auth/login
 
-
 Prepare the frontend authentication architecture around these endpoints.
 
 Eventually the login response will contain a JWT.
@@ -734,7 +713,6 @@ Eventually the login response will contain a JWT.
 Prepare the application so authenticated API requests can use:
 
 Authorization: Bearer <JWT>
-
 
 Do not implement a fake login that simply redirects the user without authentication.
 
@@ -748,11 +726,9 @@ Eventually a user may send:
 
 solved leetcode 135
 
-
 or:
 
 add todo revise Spring Security
-
 
 through WhatsApp and the backend will update DevCommand.
 

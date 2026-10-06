@@ -1,5 +1,5 @@
 // Exact response shapes for the Spring Boot /api/analytics/* endpoints.
-// The backend is the source of truth — these mirror its DTOs field for field.
+// The backend is the source of truth - these mirror its DTOs field for field.
 
 export interface AnalyticsOverview {
   totalDsaProblems: number;

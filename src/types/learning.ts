@@ -2,7 +2,13 @@ export type { SpringPage } from "@/types/dsa";
 
 export const LEARNING_STATUSES = ["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "ON_HOLD"] as const;
 export type LearningStatus = (typeof LEARNING_STATUSES)[number];
-export const LEARNING_SORT_FIELDS = ["createdAt", "progress", "hoursSpent", "technology", "topic"] as const;
+export const LEARNING_SORT_FIELDS = [
+  "createdAt",
+  "progress",
+  "hoursSpent",
+  "technology",
+  "topic",
+] as const;
 export type LearningSortField = (typeof LEARNING_SORT_FIELDS)[number];
 
 export interface LearningTopic {

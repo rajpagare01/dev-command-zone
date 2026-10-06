@@ -1,15 +1,35 @@
 export type { SpringPage } from "@/types/dsa";
 
-export const PROJECT_STATUSES = ["PLANNING", "IN_PROGRESS", "COMPLETED", "ON_HOLD", "ARCHIVED"] as const;
+export const PROJECT_STATUSES = [
+  "PLANNING",
+  "IN_PROGRESS",
+  "COMPLETED",
+  "ON_HOLD",
+  "ARCHIVED",
+] as const;
 export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
-export const PROJECT_SORT_FIELDS = ["createdAt", "updatedAt", "name", "startDate", "endDate", "status"] as const;
+export const PROJECT_SORT_FIELDS = [
+  "createdAt",
+  "updatedAt",
+  "name",
+  "startDate",
+  "endDate",
+  "status",
+] as const;
 export type ProjectSortField = (typeof PROJECT_SORT_FIELDS)[number];
 
 export const PROJECT_TASK_STATUSES = ["TODO", "IN_PROGRESS", "DONE"] as const;
 export type ProjectTaskStatus = (typeof PROJECT_TASK_STATUSES)[number];
 export const PROJECT_TASK_PRIORITIES = ["LOW", "MEDIUM", "HIGH"] as const;
 export type ProjectTaskPriority = (typeof PROJECT_TASK_PRIORITIES)[number];
-export const PROJECT_TASK_SORT_FIELDS = ["createdAt", "updatedAt", "title", "dueDate", "status", "priority"] as const;
+export const PROJECT_TASK_SORT_FIELDS = [
+  "createdAt",
+  "updatedAt",
+  "title",
+  "dueDate",
+  "status",
+  "priority",
+] as const;
 export type ProjectTaskSortField = (typeof PROJECT_TASK_SORT_FIELDS)[number];
 
 export interface Project {
@@ -56,7 +76,7 @@ export interface ProjectTask {
   updatedAt: string;
 }
 
-/** Never contains id, project, projectId or timestamps — projectId lives only in the URL. */
+/** Never contains id, project, projectId or timestamps - projectId lives only in the URL. */
 export interface ProjectTaskRequest {
   title: string;
   description?: string;
@@ -65,7 +85,7 @@ export interface ProjectTaskRequest {
   dueDate?: string;
 }
 
-/** No search — the backend does not support it for project tasks. */
+/** No search - the backend does not support it for project tasks. */
 export interface ProjectTaskListParams {
   status?: ProjectTaskStatus | undefined;
   priority?: ProjectTaskPriority | undefined;

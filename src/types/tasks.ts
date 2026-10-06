@@ -21,7 +21,7 @@ export interface DailyTask {
   updatedAt: string;
 }
 
-/** Full replacement body for POST and PUT. Never includes userId — ownership comes from the JWT. */
+/** Full replacement body for POST and PUT. Never includes userId - ownership comes from the JWT. */
 export interface DailyTaskRequest {
   title: string;
   description: string | null;

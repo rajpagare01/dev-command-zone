@@ -37,7 +37,8 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401 && authStorage.getToken()) {
       authStorage.clear();
-      if (typeof window !== "undefined") window.dispatchEvent(new Event("devcommand:session-expired"));
+      if (typeof window !== "undefined")
+        window.dispatchEvent(new Event("devcommand:session-expired"));
     }
     return Promise.reject(toApiError(error));
   },
@@ -57,7 +58,9 @@ function getFieldErrors(data: unknown): Record<string, string> | undefined {
   const candidate = Reflect.get(data, "fieldErrors") ?? Reflect.get(data, "errors");
   if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) return undefined;
   return Object.fromEntries(
-    Object.entries(candidate).flatMap(([key, value]) => typeof value === "string" ? [[key, value]] : []),
+    Object.entries(candidate).flatMap(([key, value]) =>
+      typeof value === "string" ? [[key, value]] : [],
+    ),
   );
 }
 
@@ -70,17 +73,26 @@ const STATUS_MESSAGES: Record<number, string> = {
 };
 
 function toApiError(error: unknown): ApiError {
-  if (!(error instanceof AxiosError)) return new ApiError({ message: "Something went wrong. Please try again." });
+  if (!(error instanceof AxiosError))
+    return new ApiError({ message: "Something went wrong. Please try again." });
   if (!error.response) return new ApiError({ message: "Unable to connect to server." });
   const { status, data } = error.response;
   const fieldErrors = getFieldErrors(data);
   const backendMessage = getMessage(data);
-  const safeBackendMessage = backendMessage && backendMessage.length < 200 && !/exception|\bat\s+[\w.$]+\(/i.test(backendMessage) ? backendMessage : undefined;
+  const safeBackendMessage =
+    backendMessage &&
+    backendMessage.length < 200 &&
+    !/exception|\bat\s+[\w.$]+\(/i.test(backendMessage)
+      ? backendMessage
+      : undefined;
   return new ApiError({
     status,
-    message: status >= 500
-      ? "Server error. Please try again later."
-      : safeBackendMessage ?? STATUS_MESSAGES[status] ?? "The server could not complete your request.",
+    message:
+      status >= 500
+        ? "Server error. Please try again later."
+        : (safeBackendMessage ??
+          STATUS_MESSAGES[status] ??
+          "The server could not complete your request."),
     ...(fieldErrors ? { fieldErrors } : {}),
   });
 }
@@ -90,11 +102,20 @@ export async function apiRequest<T>(path: string, options: AxiosRequestConfig = 
   return response.data;
 }
 
-export interface LoginPayload { email: string; password: string }
-export interface RegisterPayload { name: string; email: string; password: string }
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+}
 export type AuthResponse = Record<string, unknown>;
 
 export const authService = {
-  login: (payload: LoginPayload) => apiRequest<AuthResponse>("/api/auth/login", { method: "POST", data: payload }),
-  register: (payload: RegisterPayload) => apiRequest<unknown>("/api/auth/register", { method: "POST", data: payload }),
+  login: (payload: LoginPayload) =>
+    apiRequest<AuthResponse>("/api/auth/login", { method: "POST", data: payload }),
+  register: (payload: RegisterPayload) =>
+    apiRequest<unknown>("/api/auth/register", { method: "POST", data: payload }),
 };

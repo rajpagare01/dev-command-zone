@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { authService, type LoginPayload, type RegisterPayload } from "@/services/api";
@@ -55,14 +63,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearCaches();
   }, [clearCaches]);
 
-  const value = useMemo<AuthContextValue>(() => ({
-    isAuthenticated: session !== null,
-    token: session?.token ?? null,
-    currentUser: session?.user ?? null,
-    login,
-    register,
-    logout,
-  }), [session, login, register, logout]);
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      isAuthenticated: session !== null,
+      token: session?.token ?? null,
+      currentUser: session?.user ?? null,
+      login,
+      register,
+      logout,
+    }),
+    [session, login, register, logout],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

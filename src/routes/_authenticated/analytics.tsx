@@ -1,4 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/layout/page-shell";
 import { AnalyticsPage } from "@/components/analytics/analytics-page";
-export const Route = createFileRoute("/_authenticated/analytics")({ head: () => ({ meta: [{ title: "Analytics — DevCommand" }, { name: "description", content: "Track your overall development progress and activity across DSA, tasks, jobs, learning, and projects." }, { property: "og:title", content: "Analytics — DevCommand" }, { property: "og:description", content: "Track your overall development progress and activity across DSA, tasks, jobs, learning, and projects." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: () => <PageShell><AnalyticsPage /></PageShell> });
+export const Route = createFileRoute("/_authenticated/analytics")({
+  head: () => ({
+    meta: [
+      { title: "Analytics - DevCommand" },
+      {
+        name: "description",
+        content:
+          "Track your overall development progress and activity across DSA, tasks, jobs, learning, and projects.",
+      },
+      { property: "og:title", content: "Analytics - DevCommand" },
+      {
+        property: "og:description",
+        content:
+          "Track your overall development progress and activity across DSA, tasks, jobs, learning, and projects.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: () => (
+    <PageShell>
+      <AnalyticsPage />
+    </PageShell>
+  ),
+});

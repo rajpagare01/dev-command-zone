@@ -36,10 +36,20 @@ export function extractAuth(response: Record<string, unknown>, fallbackEmail: st
   if (!token) throw new Error("The authentication response did not include a JWT.");
 
   const responseUser = response["user"];
-  const userRecord = responseUser && typeof responseUser === "object" ? responseUser as Record<string, unknown> : response;
+  const userRecord =
+    responseUser && typeof responseUser === "object"
+      ? (responseUser as Record<string, unknown>)
+      : response;
   const claims = decodeJwtPayload(token);
-  const email = stringValue(userRecord, ["email", "username"]) ?? stringValue(claims, ["email", "sub"]) ?? fallbackEmail;
-  const name = stringValue(userRecord, ["name", "fullName", "displayName"]) ?? stringValue(claims, ["name", "fullName"]) ?? email.split("@")[0] ?? "Developer";
+  const email =
+    stringValue(userRecord, ["email", "username"]) ??
+    stringValue(claims, ["email", "sub"]) ??
+    fallbackEmail;
+  const name =
+    stringValue(userRecord, ["name", "fullName", "displayName"]) ??
+    stringValue(claims, ["name", "fullName"]) ??
+    email.split("@")[0] ??
+    "Developer";
   const id = stringValue(userRecord, ["id", "userId"]) ?? stringValue(claims, ["sub", "userId"]);
   return { token, user: { ...(id ? { id } : {}), name, email } };
 }
@@ -68,7 +78,8 @@ export const authStorage = {
   read,
   getToken: () => read()?.token ?? null,
   save: (auth: StoredAuth) => {
-    if (typeof window !== "undefined") window.localStorage.setItem(STORAGE_KEY, JSON.stringify(auth));
+    if (typeof window !== "undefined")
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(auth));
   },
   clear: () => {
     if (typeof window !== "undefined") window.localStorage.removeItem(STORAGE_KEY);

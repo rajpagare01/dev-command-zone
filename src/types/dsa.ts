@@ -1,6 +1,14 @@
 export const DSA_DIFFICULTIES = ["EASY", "MEDIUM", "HARD"] as const;
 export const DSA_STATUSES = ["TODO", "SOLVED", "REVISION", "MASTERED"] as const;
-export const DSA_SORT_FIELDS = ["createdAt", "updatedAt", "title", "dateSolved", "revisionDate", "difficulty", "status"] as const;
+export const DSA_SORT_FIELDS = [
+  "createdAt",
+  "updatedAt",
+  "title",
+  "dateSolved",
+  "revisionDate",
+  "difficulty",
+  "status",
+] as const;
 
 export type DsaDifficulty = (typeof DSA_DIFFICULTIES)[number];
 export type DsaStatus = (typeof DSA_STATUSES)[number];
@@ -24,7 +32,7 @@ export interface DsaProblem {
   updatedAt: string;
 }
 
-/** Mirrors the create/update request DTO (full replacement on PUT). No userId — derived from JWT. */
+/** Mirrors the create/update request DTO (full replacement on PUT). No userId - derived from JWT. */
 export interface DsaProblemRequest {
   title: string;
   platform: string;

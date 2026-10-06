@@ -1,9 +1,11 @@
 # DevCommand frontend polish
 
 ## Goal
+
 Polish the existing product into one cohesive, production-quality dark developer command center without changing routes, API contracts, authentication, data behavior, or backend ownership rules.
 
 ## Design direction: Calm Developer Workspace
+
 - Use Linear, GitHub, Vercel, Raycast, Notion, and modern IDEs only as quality references—not templates to copy.
 - Keep near-black neutral surfaces, subtle borders, crisp sans-serif hierarchy, restrained 6–10px radii, one sparingly used indigo accent, and controlled semantic colors.
 - Prefer spacing, typography, alignment, and contrast over gradients, glow, glass, shadows, animation, decorative icons, and excessive cards.
@@ -12,6 +14,7 @@ Polish the existing product into one cohesive, production-quality dark developer
 - Make tables feel like developer tooling, forms visibly grouped by purpose, dialogs focused, and mobile layouts intentionally stacked rather than shrunken desktop screens.
 
 ## Implementation
+
 1. **Shared visual foundation**
    - Refine semantic color, surface, border, shadow, typography, spacing, radius, focus, and motion tokens.
    - Standardize shared buttons, cards, badges, progress, inputs, tabs, loading skeletons, empty states, errors, pagination, filters, status pills, and destructive confirmations.
@@ -40,10 +43,12 @@ Polish the existing product into one cohesive, production-quality dark developer
    - Check TypeScript, production build, browser console, runtime errors, overflow, accessibility names, and unchanged service contracts.
 
 ## Technical constraints
+
 - Existing TanStack Router, React Query, Axios client, JWT flow, services, endpoint paths, methods, DTOs, and cache invalidation stay authoritative.
 - No backend, database, mock-data fallback, new state library, or unnecessary dependency changes.
 - Semantic design tokens remain in the global Tailwind v4 stylesheet; feature code uses shared tokens and components.
 - Settings may show current account/session and frontend environment status, but will not pretend unsupported preferences persist.
 
 ## Deliverable
+
 A fully polished existing frontend plus the requested PASS/NEEDS WORK matrix, changed-file summary, remaining issues, build result, and any integration findings.

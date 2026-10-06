@@ -1,6 +1,14 @@
 export type { SpringPage } from "@/types/dsa";
 
-export const APPLICATION_STATUSES = ["SAVED", "APPLIED", "SCREENING", "INTERVIEW", "OFFER", "REJECTED", "WITHDRAWN"] as const;
+export const APPLICATION_STATUSES = [
+  "SAVED",
+  "APPLIED",
+  "SCREENING",
+  "INTERVIEW",
+  "OFFER",
+  "REJECTED",
+  "WITHDRAWN",
+] as const;
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
 export const INTERVIEW_STATUSES = ["SCHEDULED", "COMPLETED", "CANCELLED", "RESCHEDULED"] as const;
@@ -25,7 +33,7 @@ export interface JobApplication {
   updatedAt: string;
 }
 
-/** Full body for POST and PUT. Never includes userId — ownership comes from the JWT. */
+/** Full body for POST and PUT. Never includes userId - ownership comes from the JWT. */
 export interface JobApplicationRequest {
   company: string;
   role: string;
