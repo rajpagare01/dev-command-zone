@@ -233,7 +233,7 @@ export function DashboardContent() {
             const p = pct(d.completedTasks, d.totalTasks);
             return (
               <div className="space-y-4">
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <Mini label="Due today" value={show(d.tasksDueToday)} />
                   <Mini label="Done today" value={show(d.completedToday)} />
                   <Mini label="Overdue" value={show(d.overdueTasks)} />
@@ -262,12 +262,12 @@ export function DashboardContent() {
         >
           {(d) => (
             <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <Mini label="Today" value={show(d.solvedToday)} />
                 <Mini label="This week" value={show(d.solvedThisWeek)} />
                 <Mini label="This month" value={show(d.solvedThisMonth)} />
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <StatRow label="Easy" value={d.easyProblems} tone="green" />
                 <StatRow label="Medium" value={d.mediumProblems} tone="amber" />
                 <StatRow label="Hard" value={d.hardProblems} tone="red" />
