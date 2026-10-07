@@ -48,7 +48,7 @@ export function LoginForm() {
     <>
       <div className="mb-8">
         <p className="mb-3 font-mono text-xs text-primary">// WELCOME_BACK</p>
-        <h1 className="font-display text-3xl font-semibold">Sign in to DevCommand</h1>
+        <h1 className="font-display text-2xl font-semibold leading-snug">Sign in to DevCommand</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Continue managing your developer journey.
         </p>
@@ -91,7 +91,7 @@ export function LoginForm() {
             </p>
           )}
         </div>
-        <Button className="h-10 w-full" type="submit" disabled={submitting}>
+        <Button className="h-11 w-full font-mono" type="submit" disabled={submitting}>
           {submitting ? (
             <>
               <Loader2 className="animate-spin" />
@@ -113,9 +113,9 @@ export function LoginForm() {
           </p>
         )}
       </form>
-      <p className="mt-7 text-center text-sm text-muted-foreground">
+      <p className="mt-8 border-t border-border pt-7 text-center text-sm text-muted-foreground">
         Don’t have an account?{" "}
-        <Link to="/register" className="font-medium text-primary hover:underline">
+        <Link to="/register" className="inline-flex min-h-11 items-center font-medium text-success hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           Create one
         </Link>
       </p>

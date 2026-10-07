@@ -58,7 +58,7 @@ export function RegisterForm() {
     <>
       <div className="mb-7">
         <p className="mb-3 font-mono text-xs text-primary">// CREATE_WORKSPACE</p>
-        <h1 className="font-display text-3xl font-semibold">Start your journey</h1>
+        <h1 className="font-display text-2xl font-semibold leading-snug">Start your journey</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Create your personal developer command center.
         </p>
@@ -158,7 +158,7 @@ export function RegisterForm() {
             </p>
           )}
         </div>
-        <Button className="h-10 w-full" type="submit" disabled={submitting}>
+        <Button className="h-11 w-full font-mono" type="submit" disabled={submitting}>
           {submitting ? (
             <>
               <Loader2 className="animate-spin" />
@@ -180,12 +180,12 @@ export function RegisterForm() {
           </p>
         )}
       </form>
-      <p className="mt-6 text-center text-sm text-muted-foreground">
+      <p className="mt-8 border-t border-border pt-7 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link
           to="/login"
           search={{ redirect: undefined }}
-          className="font-medium text-primary hover:underline"
+          className="inline-flex min-h-11 items-center font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           Sign in
         </Link>

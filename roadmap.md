@@ -1,4 +1,8 @@
 # Dashboard command center
+## Workspace visual refinement
+- [x] Apply selected terminal-centered auth composition and shared graphite/blue styling across workspace.
+- [x] Verify auth layouts at 320/390/768/1280/1440px, workspace layouts at 390/768/1280px, password visibility, local form validation, mobile navigation, and build OK. Workspace checks used an isolated visual session with all backend access blocked, not live integration.
+
 - [x] Improve dashboard empty guidance and section-shaped mobile skeletons; verified loading, empty layouts, and workspace links at 320/390/768/1280px with isolated UI tests.
 - [x] Review narrow dashboard sections and fix wrapping or overflow.
 - [x] Improve mobile dashboard touch targets and verify keyboard focus and navigation at 320–1280px with isolated layout fixtures, not live backend data.
