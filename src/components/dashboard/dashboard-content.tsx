@@ -65,19 +65,45 @@ function SectionError({ onRetry }: { onRetry: () => void }) {
     </div>
   );
 }
-function SectionEmpty({ text }: { text: string }) {
+type EmptyGuidance = {
+  title: string;
+  description: string;
+  action: string;
+  to: "/tasks" | "/dsa" | "/jobs" | "/learning" | "/projects";
+  icon: typeof Code2;
+};
+function SectionEmpty({ title, description, action, to, icon: Icon }: EmptyGuidance) {
   return (
-    <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-      {text}
+    <div className="flex min-w-0 flex-col items-start gap-3 py-3 [overflow-wrap:anywhere]">
+      <span className="grid size-9 place-items-center rounded-md bg-surface-subtle text-muted-foreground" aria-hidden="true"><Icon className="size-4" /></span>
+      <div className="min-w-0 space-y-1">
+        <p className="text-sm font-medium text-foreground">{title}</p>
+        <p className="text-sm leading-6 text-muted-foreground">{description}</p>
+      </div>
+      <Button variant="outline" className="mt-1 h-auto min-h-11 max-w-full whitespace-normal text-left sm:min-h-9" asChild>
+        <Link to={to}><Plus />{action}</Link>
+      </Button>
     </div>
   );
 }
-function Rows({ n = 4 }: { n?: number }) {
+type SectionLayout = "tasks" | "dsa" | "jobs" | "learning" | "projects";
+function SectionSkeleton({ layout, title }: { layout: SectionLayout; title: string }) {
+  const summary = layout === "tasks" || layout === "dsa";
+  const progress = layout !== "dsa" && layout !== "jobs";
+  const count = layout === "tasks" ? 3 : layout === "dsa" ? 6 : layout === "learning" ? 4 : 5;
   return (
-    <div className="space-y-3" aria-busy="true" aria-label="Loading">
-      {Array.from({ length: n }, (_, i) => (
-        <Skeleton key={i} className="h-11 w-full" />
-      ))}
+    <div className="min-w-0 space-y-4" role="status" aria-label={`Loading ${title}`}>
+      <span className="sr-only">Loading {title}</span>
+      <div className="space-y-4" aria-hidden="true">
+        {summary && <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {Array.from({ length: 3 }, (_, i) => <div key={i} className="min-w-0 rounded-md border border-border bg-surface-subtle p-3"><Skeleton className="h-3 w-16 max-w-full" /><Skeleton className="mt-2 h-6 w-12 max-w-full" /></div>)}
+        </div>}
+        {progress && <div className="space-y-2"><div className="flex items-center justify-between gap-4"><Skeleton className="h-4 w-32 max-w-full" /><Skeleton className="h-3 w-8 shrink-0" /></div><Skeleton className="h-2 w-full" /></div>}
+        {layout === "learning" && <div className="rounded-md border border-border bg-surface-subtle p-3"><Skeleton className="h-3 w-20 max-w-full" /><Skeleton className="mt-2 h-6 w-16 max-w-full" /></div>}
+        <div className={cn("grid gap-2", layout === "dsa" && "sm:grid-cols-2")}>
+          {Array.from({ length: count }, (_, i) => <div key={i} className="flex min-w-0 items-center gap-2 rounded-md border border-border bg-surface-subtle p-3"><Skeleton className="size-2 shrink-0" /><Skeleton className={cn("h-4 min-w-0 max-w-full", i % 2 ? "w-20" : "w-24")} /><Skeleton className="ml-auto h-7 w-8 shrink-0" /></div>)}
+        </div>
+      </div>
     </div>
   );
 }
@@ -88,13 +114,15 @@ function Section<T>({
   query,
   isEmpty,
   empty,
+  layout,
   children,
 }: {
   title: string;
   subtitle: string;
   query: UseQueryResult<T>;
   isEmpty: (d: T) => boolean;
-  empty: string;
+  empty: EmptyGuidance;
+  layout: SectionLayout;
   children: (d: T) => ReactNode;
 }) {
   return (
@@ -103,13 +131,13 @@ function Section<T>({
         <CardTitle>{title}</CardTitle>
         <p className="text-sm text-muted-foreground">{subtitle}</p>
       </CardHeader>
-      <CardContent>
+      <CardContent aria-busy={query.isPending}>
         {query.isPending ? (
-          <Rows />
+          <SectionSkeleton layout={layout} title={title} />
         ) : query.isError ? (
           <SectionError onRetry={() => void query.refetch()} />
         ) : isEmpty(query.data) ? (
-          <SectionEmpty text={empty} />
+          <SectionEmpty {...empty} />
         ) : (
           children(query.data)
         )}
@@ -227,7 +255,8 @@ export function DashboardContent() {
           subtitle="Tasks due and completed today"
           query={tasks}
           isEmpty={(d) => !d.totalTasks}
-          empty="No tasks yet. Add your first task to plan your day."
+          layout="tasks"
+          empty={{ title: "Plan your first task", description: "Add a task with a due date to give today a clear starting point.", action: "Open Tasks", to: "/tasks", icon: ListChecks }}
         >
           {(d) => {
             const p = pct(d.completedTasks, d.totalTasks);
@@ -258,7 +287,8 @@ export function DashboardContent() {
           subtitle="Recent DSA momentum"
           query={dsa}
           isEmpty={(d) => !d.totalProblems}
-          empty="No DSA problems yet. Add your first problem to start tracking."
+          layout="dsa"
+          empty={{ title: "Start your problem-solving practice", description: "Add a problem to track solutions, difficulty, and revisions.", action: "Open DSA", to: "/dsa", icon: Code2 }}
         >
           {(d) => (
             <div className="space-y-4">
@@ -283,14 +313,14 @@ export function DashboardContent() {
       <section
         className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
         aria-label="Key metrics"
+        aria-busy={overview.isPending}
       >
         {overview.isPending ? (
           Array.from({ length: 5 }, (_, i) => (
             <Card key={i}>
-              <CardContent className="space-y-4 p-5" aria-busy="true">
-                <Skeleton className="size-10" />
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-8 w-20" />
+              <CardContent className="min-w-0 p-5">
+                {i === 0 && <span className="sr-only" role="status">Loading key metrics</span>}
+                <div aria-hidden="true"><Skeleton className="size-9" /><Skeleton className="mt-4 h-4 w-24 max-w-full" /><div className="mt-1 flex flex-wrap items-end justify-between gap-3"><Skeleton className="h-7 w-20 max-w-full" /><Skeleton className="h-3 w-12 max-w-full" /></div></div>
               </CardContent>
             </Card>
           ))
@@ -335,7 +365,8 @@ export function DashboardContent() {
           subtitle="Current pipeline snapshot"
           query={jobs}
           isEmpty={(d) => !d.totalApplications}
-          empty="No applications yet."
+          layout="jobs"
+          empty={{ title: "Begin your application pipeline", description: "Save a role or add an application to follow its progress through interviews and offers.", action: "Open Jobs", to: "/jobs", icon: Briefcase }}
         >
           {(d) => (
             <div className="space-y-2">
@@ -352,7 +383,8 @@ export function DashboardContent() {
           subtitle="Topics and time invested"
           query={learning}
           isEmpty={(d) => !d.totalTopics}
-          empty="No learning topics yet."
+          layout="learning"
+          empty={{ title: "Choose your next learning topic", description: "Add a technology and topic to track your progress and time invested.", action: "Open Learning", to: "/learning", icon: BookOpen }}
         >
           {(d) => {
             const avg = clampPct(d.averageProgress);
@@ -386,7 +418,8 @@ export function DashboardContent() {
           subtitle="What you’re building"
           query={projects}
           isEmpty={(d) => !d.totalProjects}
-          empty="No projects yet."
+          layout="projects"
+          empty={{ title: "Give your next project a home", description: "Add a project, then break the work into tasks you can move forward.", action: "Open Projects", to: "/projects", icon: FolderKanban }}
         >
           {(d) => {
             const rate =
