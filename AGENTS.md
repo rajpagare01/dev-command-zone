@@ -11,6 +11,8 @@
 
 <!-- LOVABLE:END -->
 
+Avoid rewriting published git history; keep the connected branch in a working state to preserve project history.
+
 ## Project architecture
 
 - Shared interaction states and semantic status treatments belong in `src/components/common`; this keeps backend-connected modules visually consistent without changing their API logic.
@@ -27,8 +29,8 @@
 - Emoji icons (use proper SVG/lucide icons instead)
 - Em dashes
 - Crazy scroll or cursor animations
-- "Made with AI" tags
-- AI "slop" photos or copy
+- Third-party generator attribution tags
+- Generic generated photos or copy
 - Fake customer counters
 
 **PRE-LAUNCH REQUIREMENTS:**

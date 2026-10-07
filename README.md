@@ -43,8 +43,6 @@ Developer activity
 
 WhatsApp commands
 
-AI developer assistant
-
 The current frontend should establish the complete visual foundation while only implementing the authentication UI and dashboard shell.
 
 DESIGN STYLE
@@ -810,8 +808,6 @@ implement analytics logic
 
 implement WhatsApp
 
-implement AI
-
 implement GitHub integration
 
 implement LeetCode integration
@@ -843,16 +839,6 @@ Keep mock presentation data clearly separated from future API data.
 Do not modify or create any backend.
 
 Build the application now.
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/a556803e-be99-4d47-83bf-c6623708e6c4).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
