@@ -20,10 +20,10 @@ export function SystemStatus({ signals }: { signals: SyncSignal[] }) {
   let host = "Not configured";
   try { host = new URL(backend).host; } catch { /* Do not display invalid configuration. */ }
   const label = syncing ? "Syncing" : failures ? "Requests failed" : healthy ? "API responding" : "Not checked";
-  return <div role="status" className="flex flex-wrap items-center gap-x-5 gap-y-2 border-y border-border py-3 text-xs text-muted-foreground">
-    <span className="flex items-center gap-2"><Activity className={syncing ? "size-3.5 text-info" : failures ? "size-3.5 text-warning" : healthy ? "size-3.5 text-success" : "size-3.5"} /><span className="font-medium text-foreground">{label}</span></span>
-    <span className="flex items-center gap-2"><Server className="size-3.5" /><span className="font-mono">{host}</span></span>
-    <span className="flex items-center gap-2 sm:ml-auto"><RotateCw className={syncing ? "size-3.5 animate-spin motion-reduce:animate-none" : "size-3.5"} />{lastSync ? `Last response ${new Date(lastSync).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}` : "Awaiting first response"}</span>
+  return <div role="status" className="grid min-w-0 gap-2 border-y border-border py-3 text-xs text-muted-foreground sm:flex sm:flex-wrap sm:items-center sm:gap-x-5">
+    <span className="flex min-w-0 items-center gap-2"><Activity className={syncing ? "size-3.5 shrink-0 text-info" : failures ? "size-3.5 shrink-0 text-warning" : healthy ? "size-3.5 shrink-0 text-success" : "size-3.5 shrink-0"} /><span className="font-medium text-foreground">{label}</span></span>
+    <span className="flex min-w-0 items-center gap-2"><Server className="size-3.5 shrink-0" /><span className="min-w-0 break-words font-mono [overflow-wrap:anywhere]">{host}</span></span>
+    <span className="flex min-w-0 items-center gap-2 sm:ml-auto"><RotateCw className={syncing ? "size-3.5 shrink-0 animate-spin motion-reduce:animate-none" : "size-3.5 shrink-0"} />{lastSync ? `Last response ${new Date(lastSync).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}` : "Awaiting first response"}</span>
   </div>;
 }
 
@@ -44,23 +44,23 @@ export function PriorityFocus({ solvedToday, dsaError, dsaPending }: { solvedTod
     onError: (failure: Error) => toast.error(failure.message),
   });
   return <section aria-label="Priority focus">
-    <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+    <div className="mb-3 grid min-w-0 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
       <h2 className="font-display text-base font-semibold">Priority focus</h2>
-      <div className="flex gap-2">
-        {([{ to: "/dsa", label: "DSA", key: "D" }, { to: "/tasks", label: "Tasks", key: "T" }, { to: "/jobs", label: "Jobs", key: "J" }] as const).map((item) => <Button key={item.to} variant="ghost" size="sm" className="h-8 gap-2 px-2" asChild><Link to={item.to}>{item.label}<kbd className="rounded-sm border border-border px-1 font-mono text-[10px] text-muted-foreground">G {item.key}</kbd></Link></Button>)}
+      <div className="grid min-w-0 grid-cols-2 gap-2 sm:flex">
+        {([{ to: "/dsa", label: "DSA", key: "D" }, { to: "/tasks", label: "Tasks", key: "T" }, { to: "/jobs", label: "Jobs", key: "J" }] as const).map((item) => <Button key={item.to} variant="ghost" size="sm" className="h-11 min-w-11 gap-2 px-2 sm:h-8" asChild><Link to={item.to}>{item.label}<kbd className="rounded-sm border border-border px-1 font-mono text-[10px] text-muted-foreground">G {item.key}</kbd></Link></Button>)}
         <ShortcutsToggle />
       </div>
     </div>
     <div className="divide-y divide-border border-y border-border">
-      <div className="flex flex-wrap items-center gap-3 py-4">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 py-4 sm:flex">
         <span className="grid size-9 shrink-0 place-items-center rounded-md bg-info/10 text-info"><Code2 className="size-4" /></span>
-        <div className="min-w-0 flex-1"><p className="text-xs text-muted-foreground">Problem-solving · Today</p><p className="mt-1 text-sm font-medium">{dsaPending ? "Loading DSA activity…" : dsaError ? "DSA activity unavailable" : solvedToday === undefined ? "Problem-solving workspace" : `${solvedToday} ${solvedToday === 1 ? "problem" : "problems"} solved today`}</p></div>
-        <Button variant="outline" size="sm" asChild><Link to="/dsa">Open DSA<ArrowRight /></Link></Button>
+        <div className="min-w-0 flex-1 [overflow-wrap:anywhere]"><p className="text-xs text-muted-foreground">Problem-solving · Today</p><p className="mt-1 text-sm font-medium">{dsaPending ? "Loading DSA activity…" : dsaError ? "DSA activity unavailable" : solvedToday === undefined ? "Problem-solving workspace" : `${solvedToday} ${solvedToday === 1 ? "problem" : "problems"} solved today`}</p></div>
+        <Button variant="outline" size="sm" className="col-start-2 h-11 min-w-11 justify-self-start sm:h-8 sm:shrink-0" asChild><Link to="/dsa">Open DSA<ArrowRight /></Link></Button>
       </div>
-      <div className="flex flex-wrap items-center gap-3 py-4" aria-busy={loading || mutation.isPending}>
+      <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 py-4 sm:flex" aria-busy={loading || mutation.isPending}>
         <span className="grid size-9 shrink-0 place-items-center rounded-md bg-warning/10 text-warning"><ListChecks className="size-4" /></span>
-        <div className="min-w-0 flex-1"><p className="text-xs text-muted-foreground">Daily task · High priority</p>{loading ? <Skeleton className="mt-2 h-4 w-40" /> : <p className="mt-1 break-words text-sm font-medium">{error ? "Priority tasks unavailable" : task?.title ?? "No open high-priority tasks"}</p>}{task && !error && !loading && <p className="mt-1 text-xs text-muted-foreground">{task.status === "IN_PROGRESS" ? "In progress" : "To do"}{task.dueDate ? ` · Due ${task.dueDate}` : ""}</p>}</div>
-        {error ? <Button variant="outline" size="sm" onClick={() => { void active.refetch(); void queued.refetch(); }}><RotateCw />Retry</Button> : task && !loading ? <Button size="sm" disabled={mutation.isPending} onClick={() => mutation.mutate(task)}>{mutation.isPending ? <Loader2 className="animate-spin" /> : task.status === "IN_PROGRESS" ? <Check /> : <Play />}{task.status === "IN_PROGRESS" ? "Complete" : "Start task"}</Button> : <Button variant="outline" size="sm" asChild><Link to="/tasks">Open tasks<ArrowRight /></Link></Button>}
+        <div className="min-w-0 flex-1 [overflow-wrap:anywhere]"><p className="text-xs text-muted-foreground">Daily task · High priority</p>{loading ? <Skeleton className="mt-2 h-4 w-40 max-w-full" /> : <p className="mt-1 break-words text-sm font-medium">{error ? "Priority tasks unavailable" : task?.title ?? "No open high-priority tasks"}</p>}{task && !error && !loading && <p className="mt-1 text-xs text-muted-foreground">{task.status === "IN_PROGRESS" ? "In progress" : "To do"}{task.dueDate ? ` · Due ${task.dueDate}` : ""}</p>}</div>
+        {error ? <Button variant="outline" size="sm" className="col-start-2 h-11 min-w-11 justify-self-start sm:h-8 sm:shrink-0" onClick={() => { void active.refetch(); void queued.refetch(); }}><RotateCw />Retry</Button> : task && !loading ? <Button size="sm" className="col-start-2 h-11 min-w-11 justify-self-start sm:h-8 sm:shrink-0" disabled={mutation.isPending} onClick={() => mutation.mutate(task)}>{mutation.isPending ? <Loader2 className="animate-spin" /> : task.status === "IN_PROGRESS" ? <Check /> : <Play />}{task.status === "IN_PROGRESS" ? "Complete" : "Start task"}</Button> : <Button variant="outline" size="sm" className="col-start-2 h-11 min-w-11 justify-self-start sm:h-8 sm:shrink-0" asChild><Link to="/tasks">Open tasks<ArrowRight /></Link></Button>}
       </div>
     </div>
   </section>;
@@ -76,7 +76,7 @@ function ShortcutsToggle() {
     <Button
       variant="ghost"
       size="sm"
-      className="h-8 gap-2 px-2"
+      className="h-11 min-w-11 gap-2 px-2 sm:h-8"
       aria-label={open ? "Hide keyboard shortcuts" : "Show keyboard shortcuts"}
       aria-pressed={open}
       aria-haspopup="dialog"

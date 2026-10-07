@@ -58,7 +58,7 @@ function SectionError({ onRetry }: { onRetry: () => void }) {
     >
       <AlertCircle className="size-5 text-danger" />
       <p className="text-sm text-muted-foreground">Unable to load analytics</p>
-      <Button size="sm" variant="outline" onClick={onRetry}>
+      <Button size="sm" variant="outline" className="h-11 min-w-11 sm:h-8" onClick={onRetry}>
         <RotateCw />
         Retry
       </Button>
@@ -98,7 +98,7 @@ function Section<T>({
   children: (d: T) => ReactNode;
 }) {
   return (
-    <Card>
+    <Card className="min-w-0 [overflow-wrap:anywhere]">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <p className="text-sm text-muted-foreground">{subtitle}</p>
@@ -120,16 +120,16 @@ function Section<T>({
 
 function StatRow({ label, value, tone }: { label: string; value: number | undefined; tone: Tone }) {
   return (
-    <div className="flex items-center rounded-md border border-border bg-surface-subtle p-3">
-      <span className={cn("mr-3 size-2 rounded-full", dot[tone])} />
-      <span className="flex-1 text-sm text-muted-foreground">{label}</span>
-      <span className="font-display text-lg font-semibold">{show(value)}</span>
+    <div className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)_minmax(0,auto)] items-center gap-2 rounded-md border border-border bg-surface-subtle p-3">
+      <span className={cn("size-2 shrink-0 rounded-full", dot[tone])} />
+      <span className="min-w-0 text-sm text-muted-foreground">{label}</span>
+      <span className="min-w-0 break-words text-right font-display text-lg font-semibold">{show(value)}</span>
     </div>
   );
 }
 function Mini({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-border bg-surface-subtle p-3">
+    <div className="min-w-0 rounded-md border border-border bg-surface-subtle p-3 [overflow-wrap:anywhere]">
       <p className="text-xs text-muted-foreground">{label}</p>
       <p className="mt-1 font-display text-xl font-semibold">{value}</p>
     </div>
@@ -202,17 +202,17 @@ export function DashboardContent() {
     : [];
 
   return (
-    <div className="space-y-6 animate-page-in">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+    <div className="min-w-0 space-y-6 animate-page-in">
+      <header className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-4">
         <div className="min-w-0">
-          <h1 className="truncate font-display text-2xl font-semibold text-foreground sm:text-[28px]">
+          <h1 className="break-words font-display text-2xl font-semibold text-foreground [overflow-wrap:anywhere] sm:text-[28px]">
             {greeting()}, {firstName}
           </h1>
           <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
             Your development workspace for today.
           </p>
         </div>
-        <div className="flex h-9 shrink-0 items-center gap-2 rounded-md border border-border bg-card px-3 text-xs text-muted-foreground sm:text-sm">
+        <div className="flex h-9 w-fit shrink-0 items-center gap-2 rounded-md border border-border bg-card px-3 text-xs text-muted-foreground sm:text-sm">
           <CalendarDays className="size-4" />
           {today}
         </div>
@@ -306,9 +306,9 @@ export function DashboardContent() {
                   <k.icon className="size-4" />
                 </span>
                 <p className="mt-4 text-xs font-medium text-muted-foreground">{k.label}</p>
-                <div className="mt-1 flex items-end justify-between gap-3">
-                  <p className="font-display text-xl font-semibold">{k.value}</p>
-                  <p className="pb-0.5 text-xs text-muted-foreground">{k.sub}</p>
+                <div className="mt-1 flex flex-wrap items-end justify-between gap-x-3 gap-y-1">
+                  <p className="min-w-0 break-words font-display text-xl font-semibold [overflow-wrap:anywhere]">{k.value}</p>
+                  <p className="min-w-0 break-words pb-0.5 text-xs text-muted-foreground">{k.sub}</p>
                 </div>
               </CardContent>
             </Card>
@@ -360,7 +360,7 @@ export function DashboardContent() {
               <div className="space-y-4">
                 {avg !== undefined && (
                   <div>
-                    <div className="mb-2 flex justify-between text-sm">
+                    <div className="mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 text-sm">
                       <span className="font-medium">Average progress</span>
                       <span className="font-mono text-xs text-muted-foreground">{avg}%</span>
                     </div>
@@ -396,7 +396,7 @@ export function DashboardContent() {
               <div className="space-y-4">
                 {rate !== undefined && (
                   <div>
-                    <div className="mb-2 flex justify-between text-sm">
+                    <div className="mb-2 grid grid-cols-1 gap-1 text-sm sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)] sm:items-center sm:gap-2">
                       <span className="font-medium">Project tasks done</span>
                       <span className="font-mono text-xs text-muted-foreground">
                         {show(d.completedProjectTasks)}/{show(d.totalProjectTasks)} · {rate}%
@@ -433,7 +433,7 @@ export function DashboardContent() {
               { label: "Project", to: "/projects" },
             ] as const
           ).map((item) => (
-            <Button key={item.to} variant="outline" className="justify-start" asChild>
+            <Button key={item.to} variant="outline" className="h-auto min-h-11 min-w-0 justify-start whitespace-normal text-left sm:min-h-9" asChild>
               <Link to={item.to}>
                 <Plus />
                 {item.label}
