@@ -12,14 +12,14 @@ export const PasswordField = forwardRef<HTMLInputElement, React.ComponentProps<"
         <Input
           ref={ref}
           type={visible ? "text" : "password"}
-          className={cn("pr-10", className)}
+          className={cn("pr-12", className)}
           {...props}
         />
         <Button
           type="button"
           variant="ghost"
           size="icon"
-          className="absolute right-1 top-1/2 size-8 -translate-y-1/2 text-muted-foreground"
+          className="absolute right-0 top-1/2 size-11 -translate-y-1/2 text-muted-foreground"
           onClick={() => setVisible((v) => !v)}
           aria-label={visible ? "Hide password" : "Show password"}
         >

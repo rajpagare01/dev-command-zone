@@ -17,6 +17,7 @@ Avoid rewriting published git history; keep the connected branch in a working st
 
 - Shared interaction states and semantic status treatments belong in `src/components/common`; this keeps backend-connected modules visually consistent without changing their API logic.
 - Keep global command navigation in the authenticated app shell and dashboard priority actions in a separate dashboard module using existing task services; this preserves routing and central JWT handling.
+- Apply workspace visual themes through global semantic tokens and shared presentation components; this keeps module services, DTOs, routing, and authentication independent of visual refinements.
 
 ## Design & Launch Constraints
 

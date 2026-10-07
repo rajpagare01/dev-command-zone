@@ -59,7 +59,7 @@ function SidebarContent({
     cn(
           "group relative flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-9",
       active
-        ? "bg-sidebar-accent text-sidebar-accent-foreground before:absolute before:left-0 before:h-4 before:w-0.5 before:rounded-full before:bg-primary"
+        ? "bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-primary/20 before:absolute before:left-0 before:h-4 before:w-0.5 before:rounded-full before:bg-primary"
         : "text-muted-foreground hover:bg-sidebar-accent/70 hover:text-foreground",
       collapsed && "justify-center px-0 before:left-0",
     );
@@ -88,7 +88,7 @@ function SidebarContent({
   const group = (label: string, items: NavigationItem[]) => (
     <div className="space-y-1">
       {!collapsed && (
-        <p className="px-3 pb-1 pt-4 text-[10px] font-semibold uppercase text-muted-foreground/70">
+        <p className="px-3 pb-1 pt-4 font-mono text-[10px] font-semibold uppercase text-muted-foreground">
           {label}
         </p>
       )}
@@ -112,7 +112,7 @@ function SidebarContent({
       </nav>
       <div className="border-t border-border p-3">
         {!collapsed && (
-          <p className="px-3 pb-1 text-[10px] font-semibold uppercase text-muted-foreground/70">
+          <p className="px-3 pb-1 font-mono text-[10px] font-semibold uppercase text-muted-foreground">
             System
           </p>
         )}
@@ -189,7 +189,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             collapsed ? "md:pl-[72px]" : "md:pl-60",
           )}
         >
-          <header className="sticky top-0 z-30 grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur-md sm:px-6 lg:px-8">
+          <header className="sticky top-0 z-30 grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-terminal-chrome/95 px-4 backdrop-blur-md sm:px-6 lg:px-8">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
                 <Button
@@ -207,7 +207,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </SheetContent>
             </Sheet>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-foreground">Developer workspace</p>
+              <p className="truncate font-mono text-xs font-medium text-foreground">Developer workspace</p>
               <p className="hidden truncate text-xs text-muted-foreground sm:block">
                 Plan, practice, learn, and ship.
               </p>
