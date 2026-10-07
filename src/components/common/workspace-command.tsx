@@ -133,29 +133,31 @@ export function WorkspaceCommand() {
       <CommandItem key={`${group}-${item.id}`} value={`${group} ${item.label}`} onSelect={() => go(item)} className="group py-3">
         <item.icon /><span>{item.label}</span>
         <CommandShortcut>G {item.key}</CommandShortcut>
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
           aria-label={fav ? `Remove ${item.label} from favorites` : `Add ${item.label} to favorites`}
           aria-pressed={fav}
           onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleFavorite(item.id); }}
-          className={cn("ml-2 grid size-6 place-items-center rounded-sm text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", fav ? "text-warning" : "opacity-0 group-hover:opacity-100 group-data-[selected=true]:opacity-100 focus-visible:opacity-100")}
+          className={cn("ml-2 size-11 shrink-0 text-muted-foreground sm:size-6", fav ? "text-warning" : "sm:opacity-0 sm:group-hover:opacity-100 sm:group-data-[selected=true]:opacity-100 sm:focus-visible:opacity-100")}
         >
           <Star className={cn("size-3.5", fav && "fill-current")} />
-        </button>
+        </Button>
       </CommandItem>
     );
   };
 
   return <>
-    <Button variant="outline" onClick={() => setOpen(true)} aria-label="Search commands and routes" aria-keyshortcuts="Meta+K Control+K" className="size-9 min-w-0 shrink-0 gap-2 bg-surface-subtle px-0 text-muted-foreground lg:w-auto lg:justify-start lg:px-3">
+    <Button variant="outline" onClick={() => setOpen(true)} aria-label="Search commands and routes" aria-keyshortcuts="Meta+K Control+K" className="size-11 min-w-0 shrink-0 gap-2 bg-surface-subtle px-0 text-muted-foreground sm:size-9 lg:w-auto lg:justify-start lg:px-3">
       <Search className="size-4 shrink-0" /><span className="hidden lg:inline">Search commands…</span>
     </Button>
     <Button variant="ghost" size="icon" onClick={(event) => { event.currentTarget.focus(); setHelpOpen(true); }} aria-label="Keyboard shortcuts" aria-keyshortcuts="?" className="hidden size-9 text-muted-foreground sm:inline-flex">
       <Keyboard className="size-4" />
     </Button>
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="overflow-hidden p-0 sm:max-w-xl">
+      <DialogContent className="overflow-hidden p-0 [&>button]:right-1 [&>button]:top-1 [&>button]:grid [&>button]:size-11 [&>button]:place-items-center sm:max-w-xl sm:[&>button]:right-4 sm:[&>button]:top-4 sm:[&>button]:size-4">
         <DialogTitle className="sr-only">DevCommand commands</DialogTitle>
         <DialogDescription className="sr-only">Search workspace routes and actions. Star a route to pin it to favorites.</DialogDescription>
         <Command>
@@ -176,7 +178,7 @@ export function WorkspaceCommand() {
     </Dialog>
     <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
       <DialogContent
-        className="sm:max-w-md"
+        className="[&>button]:right-1 [&>button]:top-1 [&>button]:grid [&>button]:size-11 [&>button]:place-items-center sm:max-w-md sm:[&>button]:right-4 sm:[&>button]:top-4 sm:[&>button]:size-4"
         onOpenAutoFocus={(event) => { event.preventDefault(); (event.currentTarget as HTMLElement).focus(); }}
         onCloseAutoFocus={(event) => {
           const target = returnFocus.current;
@@ -190,9 +192,9 @@ export function WorkspaceCommand() {
         </DialogHeader>
         <ul className="divide-y divide-border rounded-md border border-border">
           {shortcutRows.map((s) => (
-            <li key={s.label} className="flex items-center justify-between gap-4 px-4 py-3 text-sm">
-              <span>{s.label}</span>
-              <span className="flex items-center gap-2">
+            <li key={s.label} className="grid min-w-0 gap-2 px-4 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4">
+              <span className="min-w-0 break-words">{s.label}</span>
+              <span className="flex flex-wrap items-center gap-2">
                 <Keys keys={s.keys} />
                 {s.alt && <><span className="text-xs text-muted-foreground">or</span><Keys keys={s.alt} /></>}
               </span>

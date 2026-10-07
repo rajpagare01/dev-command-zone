@@ -57,7 +57,7 @@ function SidebarContent({
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const linkClass = (active: boolean) =>
     cn(
-      "group relative flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors",
+          "group relative flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-9",
       active
         ? "bg-sidebar-accent text-sidebar-accent-foreground before:absolute before:left-0 before:h-4 before:w-0.5 before:rounded-full before:bg-primary"
         : "text-muted-foreground hover:bg-sidebar-accent/70 hover:text-foreground",
@@ -195,7 +195,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden"
+                  className="size-11 shrink-0 md:hidden"
                   aria-label="Open navigation"
                 >
                   <Menu />
@@ -216,7 +216,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <WorkspaceCommand />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-10 min-w-0 gap-2 px-2">
+                  <Button variant="ghost" aria-label="Account menu" className="h-11 min-w-11 gap-2 px-2 sm:h-10">
                     <Avatar className="size-7 shrink-0">
                       <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
