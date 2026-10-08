@@ -1,4 +1,8 @@
 # Dashboard command center
+## Dashboard transitions
+- [x] Add restrained navigation feedback and dashboard section transitions without changing actions or requests.
+- [x] Verify loading-to-empty section reveals, dashboard/Tasks navigation, no overflow at 1280px, and disabled animation with reduced motion using isolated responses; build OK. Live backend behavior was not tested.
+
 ## Workspace visual refinement
 - [x] Apply selected terminal-centered auth composition and shared graphite/blue styling across workspace.
 - [x] Verify auth layouts at 320/390/768/1280/1440px, workspace layouts at 390/768/1280px, password visibility, local form validation, mobile navigation, and build OK. Workspace checks used an isolated visual session with all backend access blocked, not live integration.

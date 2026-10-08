@@ -256,7 +256,30 @@
 @utility animate-page-in {
   animation: page-in 200ms ease-out both;
 }
+@keyframes dashboard-reveal {
+  from {
+    opacity: 0.75;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@utility animate-dashboard-section {
+  animation: dashboard-reveal 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.dashboard-arrival > * {
+  animation: dashboard-reveal 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.dashboard-arrival > :nth-child(2) { animation-delay: 25ms; }
+.dashboard-arrival > :nth-child(3) { animation-delay: 50ms; }
+.dashboard-arrival > :nth-child(n + 4) { animation-delay: 75ms; }
 @media (prefers-reduced-motion: reduce) {
+  .dashboard-arrival > *,
+  .animate-dashboard-section {
+    animation: none;
+  }
   *,
   *::before,
   *::after {
