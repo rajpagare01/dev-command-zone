@@ -57,7 +57,7 @@ function SidebarContent({
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const linkClass = (active: boolean) =>
     cn(
-          "group relative flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors duration-150 motion-reduce:transition-none before:absolute before:left-0 before:h-4 before:w-0.5 before:rounded-full before:bg-primary before:transition-[transform,opacity] before:duration-150 motion-reduce:before:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-9",
+          "workspace-nav-link group relative flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors duration-150 motion-reduce:transition-none before:absolute before:left-0 before:h-5 before:w-[3px] before:rounded-sm before:bg-primary before:transition-[transform,opacity] before:duration-150 motion-reduce:before:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-9",
       active
         ? "bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-primary/20 before:scale-y-100 before:opacity-100"
         : "text-muted-foreground before:scale-y-50 before:opacity-0 hover:bg-sidebar-accent/70 hover:text-foreground",
@@ -120,6 +120,7 @@ function SidebarContent({
           to="/integrations"
           onClick={onNavigate}
           className={linkClass(pathname.startsWith("/integrations"))}
+          aria-current={pathname.startsWith("/integrations") ? "page" : undefined}
         >
           <Plug
             className={cn(
@@ -129,7 +130,7 @@ function SidebarContent({
           />
           {!collapsed && <span>Integrations</span>}
         </Link>
-        <Link to="/settings" onClick={onNavigate} className={linkClass(pathname === "/settings")}>
+        <Link to="/settings" onClick={onNavigate} className={linkClass(pathname === "/settings")} aria-current={pathname === "/settings" ? "page" : undefined}>
           <Settings
             className={cn("size-[17px] shrink-0", pathname === "/settings" && "text-primary")}
           />

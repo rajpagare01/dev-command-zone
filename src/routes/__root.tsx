@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/context/auth-context";
 import { ThemeProvider, useTheme } from "@/components/theme-provider";
+import { NavigationFocus } from "@/components/common/navigation-focus";
 
 function NotFoundComponent() {
   return (
@@ -129,6 +130,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="devcommand-theme">
         <AuthProvider>
+          <NavigationFocus />
           <Outlet />
           <ThemeAwareToaster />
         </AuthProvider>

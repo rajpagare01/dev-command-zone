@@ -269,6 +269,18 @@
 @utility animate-dashboard-section {
   animation: dashboard-reveal 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+@keyframes navigation-indicator-in {
+  from { opacity: 0.4; transform: scaleY(0.6); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+.workspace-nav-link[aria-current="page"]::before {
+  animation: navigation-indicator-in 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.navigation-heading:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
 .dashboard-arrival > * {
   animation: dashboard-reveal 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -280,6 +292,7 @@
   .animate-dashboard-section {
     animation: none;
   }
+  .workspace-nav-link::before { animation: none; transition: none; }
   *,
   *::before,
   *::after {

@@ -1,5 +1,7 @@
 # Dashboard command center
 ## Dashboard transitions
+- [ ] Clarify animated active indicators across desktop, collapsed navigation, and mobile.
+- [ ] Verify keyboard destination-heading focus, retry-heading focus, unchanged pointer navigation, and Back/Forward.
 - [x] Add restrained navigation feedback and dashboard section transitions without changing actions or requests.
 - [x] Verify loading-to-empty section reveals, dashboard/Tasks navigation, no overflow at 1280px, and disabled animation with reduced motion using isolated responses; build OK. Live backend behavior was not tested.
 
