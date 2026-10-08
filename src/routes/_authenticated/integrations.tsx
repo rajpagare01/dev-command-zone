@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageShell } from "@/components/layout/page-shell";
 import { IntegrationsPage } from "@/components/integrations/integrations-page";
 
 export const Route = createFileRoute("/_authenticated/integrations")({
@@ -17,8 +16,8 @@ export const Route = createFileRoute("/_authenticated/integrations")({
     ],
   }),
   component: () => (
-    <PageShell>
+    
       <IntegrationsPage />
-    </PageShell>
+    
   ),
 });

@@ -1,5 +1,6 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { authStorage } from "@/services/auth-storage";
+import { AppShell } from "@/components/layout/app-shell";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -8,5 +9,9 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/login", search: { redirect: location.href } });
     }
   },
-  component: () => <Outlet />,
+  component: () => (
+    <AppShell>
+      <Outlet />
+    </AppShell>
+  ),
 });

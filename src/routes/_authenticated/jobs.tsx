@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageShell } from "@/components/layout/page-shell";
 import { JobsPage } from "@/components/jobs/jobs-page";
 export const Route = createFileRoute("/_authenticated/jobs")({
   head: () => ({
@@ -19,8 +18,8 @@ export const Route = createFileRoute("/_authenticated/jobs")({
     ],
   }),
   component: () => (
-    <PageShell>
+    
       <JobsPage />
-    </PageShell>
+    
   ),
 });

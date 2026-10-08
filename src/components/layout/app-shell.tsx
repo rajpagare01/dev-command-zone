@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode, useEffect, useRef } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   BarChart3,
@@ -57,7 +57,7 @@ function SidebarContent({
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const linkClass = (active: boolean) =>
     cn(
-          "workspace-nav-link group relative flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors duration-150 motion-reduce:transition-none before:absolute before:left-0 before:h-5 before:w-[3px] before:rounded-sm before:bg-primary before:transition-[transform,opacity] before:duration-150 motion-reduce:before:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-9",
+      "group relative flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors duration-150 motion-reduce:transition-none before:absolute before:left-0 before:h-4 before:w-0.5 before:rounded-full before:bg-primary before:transition-[transform,opacity] before:duration-150 motion-reduce:before:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-9",
       active
         ? "bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-primary/20 before:scale-y-100 before:opacity-100"
         : "text-muted-foreground before:scale-y-50 before:opacity-0 hover:bg-sidebar-accent/70 hover:text-foreground",
@@ -120,7 +120,6 @@ function SidebarContent({
           to="/integrations"
           onClick={onNavigate}
           className={linkClass(pathname.startsWith("/integrations"))}
-          aria-current={pathname.startsWith("/integrations") ? "page" : undefined}
         >
           <Plug
             className={cn(
@@ -130,7 +129,7 @@ function SidebarContent({
           />
           {!collapsed && <span>Integrations</span>}
         </Link>
-        <Link to="/settings" onClick={onNavigate} className={linkClass(pathname === "/settings")} aria-current={pathname === "/settings" ? "page" : undefined}>
+        <Link to="/settings" onClick={onNavigate} className={linkClass(pathname === "/settings")}>
           <Settings
             className={cn("size-[17px] shrink-0", pathname === "/settings" && "text-primary")}
           />
@@ -157,16 +156,36 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const mainRef = useRef<HTMLElement>(null);
+  
   const name = currentUser?.name ?? "Developer";
   const email = currentUser?.email ?? "";
   const firstName = name.split(" ")[0] ?? name;
+  
   const signOut = async () => {
     logout();
     await navigate({ to: "/login", search: { redirect: undefined }, replace: true });
   };
+
+  useEffect(() => {
+    // Safety focus management for keyboard navigation
+    // When the route changes, move focus to the main content area
+    // to avoid focus being trapped in the sidebar/header.
+    if (mainRef.current) {
+      mainRef.current.focus({ preventScroll: true });
+    }
+  }, [pathname]);
+
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-background text-foreground">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        >
+          Skip to main content
+        </a>
         <aside
           className={cn(
             "fixed inset-y-0 left-0 z-40 hidden border-r border-border bg-sidebar transition-[width] duration-200 md:block",
@@ -248,7 +267,14 @@ export function AppShell({ children }: { children: ReactNode }) {
               </DropdownMenu>
             </div>
           </header>
-          <main className="mx-auto w-full max-w-[1560px] p-4 sm:p-6 lg:p-8">{children}</main>
+          <main 
+            id="main-content"
+            ref={mainRef}
+            tabIndex={-1}
+            className="mx-auto w-full max-w-[1560px] p-4 outline-none sm:p-6 lg:p-8"
+          >
+            {children}
+          </main>
         </div>
       </div>
     </TooltipProvider>
