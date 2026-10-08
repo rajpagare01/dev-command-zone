@@ -125,6 +125,7 @@ function Section<T>({
   layout: SectionLayout;
   children: (d: T) => ReactNode;
 }) {
+  const phase = query.isPending ? "loading" : query.isError ? "error" : isEmpty(query.data) ? "empty" : "ready";
   return (
     <Card className="min-w-0 [overflow-wrap:anywhere]">
       <CardHeader>
@@ -132,6 +133,7 @@ function Section<T>({
         <p className="text-sm text-muted-foreground">{subtitle}</p>
       </CardHeader>
       <CardContent aria-busy={query.isPending}>
+        <div key={phase} className="min-w-0 animate-dashboard-section" data-dashboard-state={phase}>
         {query.isPending ? (
           <SectionSkeleton layout={layout} title={title} />
         ) : query.isError ? (
@@ -141,6 +143,7 @@ function Section<T>({
         ) : (
           children(query.data)
         )}
+        </div>
       </CardContent>
     </Card>
   );
@@ -230,7 +233,7 @@ export function DashboardContent() {
     : [];
 
   return (
-    <div className="min-w-0 space-y-6 animate-page-in">
+    <div className="dashboard-arrival min-w-0 space-y-6">
       <header className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-4">
         <div className="min-w-0">
           <h1 className="break-words font-display text-2xl font-semibold text-foreground [overflow-wrap:anywhere] sm:text-[28px]">
@@ -330,7 +333,7 @@ export function DashboardContent() {
           </div>
         ) : (
           kpis.map((k) => (
-            <Card key={k.label} className="transition-colors hover:border-foreground/15">
+            <Card key={k.label} className="animate-dashboard-section transition-colors hover:border-foreground/15">
               <CardContent className="p-5">
                 <span className={cn("grid size-9 place-items-center rounded-md", toneBg[k.tone])}>
                   <k.icon className="size-4" />
