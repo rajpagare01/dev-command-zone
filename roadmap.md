@@ -1,7 +1,7 @@
 # Dashboard command center
 ## Keyboard content access
-- [ ] Add a visible-on-focus skip link and searchable dashboard section commands without changing existing routes.
-- [ ] Verify keyboard focus, palette dismissal, section jumps, and browser history with isolated responses.
+- [x] Add a visible-on-focus skip link and searchable dashboard section commands without changing existing routes.
+- [x] Verify keyboard focus, palette dismissal, section jumps, and browser history with isolated responses; no runtime errors. Live backend unchanged and unverified.
 ## Dashboard transitions
 - [x] Clarify animated active indicators across desktop, collapsed navigation, and mobile; inspected screenshots at 1280px and 390px.
 - [x] Verify keyboard destination-heading focus and retry-heading focus, unchanged pointer navigation and Back/Forward using isolated responses; no runtime errors and build OK.
