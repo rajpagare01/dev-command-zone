@@ -127,19 +127,19 @@ function Section<T>({
 }) {
   const phase = query.isPending ? "loading" : query.isError ? "error" : isEmpty(query.data) ? "empty" : "ready";
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
   const retry = async (event: MouseEvent<HTMLButtonElement>) => {
     const keyboard = event.detail === 0;
+    const trigger = event.currentTarget;
     await query.refetch();
     // Do not interrupt someone who moved to another control during the request.
     requestAnimationFrame(() => {
-      if (keyboard && (document.activeElement === document.body || sectionRef.current?.contains(document.activeElement))) {
+      if (keyboard && (document.activeElement === document.body || document.activeElement === trigger)) {
         headingRef.current?.focus({ preventScroll: true });
       }
     });
   };
   return (
-    <Card ref={sectionRef} className="min-w-0 [overflow-wrap:anywhere]">
+    <Card className="min-w-0 [overflow-wrap:anywhere]">
       <CardHeader>
         <h2 ref={headingRef} tabIndex={-1} className="navigation-heading font-display text-sm font-semibold leading-snug">{title}</h2>
         <p className="text-sm text-muted-foreground">{subtitle}</p>
