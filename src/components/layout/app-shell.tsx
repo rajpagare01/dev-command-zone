@@ -171,6 +171,16 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-background text-foreground">
+        <a
+          href="#main-content"
+          className="fixed left-4 top-3 z-[60] -translate-y-24 rounded-md bg-primary px-4 py-3 text-primary-foreground focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+          onClick={(event) => {
+            event.preventDefault();
+            document.getElementById("main-content")?.focus();
+          }}
+        >
+          Skip to main content
+        </a>
         <aside
           className={cn(
             "fixed inset-y-0 left-0 z-40 hidden border-r border-border bg-sidebar transition-[width] duration-200 md:block",
@@ -252,7 +262,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </DropdownMenu>
             </div>
           </header>
-          <main className="mx-auto w-full max-w-[1560px] p-4 sm:p-6 lg:p-8">{children}</main>
+          <main id="main-content" tabIndex={-1} className="navigation-heading mx-auto w-full max-w-[1560px] scroll-mt-20 p-4 sm:p-6 lg:p-8">{children}</main>
         </div>
       </div>
     </TooltipProvider>
