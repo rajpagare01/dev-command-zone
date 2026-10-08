@@ -59,6 +59,7 @@ export function WorkspaceCommand() {
   const [prefs, setPrefs] = useState<PalettePrefs>({ recent: [], favorites: [] });
   const navigate = useNavigate();
   const client = useQueryClient();
+  const paletteReturnFocus = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!sectionTarget) return;
@@ -201,7 +202,15 @@ export function WorkspaceCommand() {
     </Button>
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        onCloseAutoFocus={(event) => { if (sectionTarget) event.preventDefault(); }}
+        onOpenAutoFocus={() => {
+          paletteReturnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        }}
+        onCloseAutoFocus={(event) => {
+          if (sectionTarget) { event.preventDefault(); return; }
+          const target = paletteReturnFocus.current;
+          if (target?.isConnected) { event.preventDefault(); target.focus({ preventScroll: true }); }
+          paletteReturnFocus.current = null;
+        }}
         className="overflow-hidden p-0 [&>button]:right-1 [&>button]:top-1 [&>button]:grid [&>button]:size-11 [&>button]:place-items-center sm:max-w-xl sm:[&>button]:right-4 sm:[&>button]:top-4 sm:[&>button]:size-4"
       >
         <DialogTitle className="sr-only">DevCommand commands</DialogTitle>
