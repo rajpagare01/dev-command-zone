@@ -173,7 +173,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="min-h-screen bg-background text-foreground">
         <a
           href="#main-content"
-          className="sr-only fixed left-4 top-3 z-[60] rounded-md bg-primary text-primary-foreground focus:not-sr-only focus:px-4 focus:py-3 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+          className="fixed left-4 top-3 z-[60] -translate-y-24 rounded-md bg-primary px-4 py-3 text-primary-foreground focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
           onClick={(event) => {
             event.preventDefault();
             document.getElementById("main-content")?.focus();
