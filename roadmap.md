@@ -1,7 +1,7 @@
 # Dashboard command center
 ## Dashboard transitions
-- [ ] Add restrained navigation feedback and dashboard section transitions without changing actions or requests.
-- [ ] Verify section state changes, navigation, and reduced-motion behavior in an isolated browser check.
+- [x] Add restrained navigation feedback and dashboard section transitions without changing actions or requests.
+- [x] Verify loading-to-empty section reveals, dashboard/Tasks navigation, no overflow at 1280px, and disabled animation with reduced motion using isolated responses; build OK. Live backend behavior was not tested.
 
 ## Workspace visual refinement
 - [x] Apply selected terminal-centered auth composition and shared graphite/blue styling across workspace.
