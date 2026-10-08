@@ -71,6 +71,7 @@ function SidebarContent({
         onClick={onNavigate}
         className={linkClass(active)}
         aria-current={active ? "page" : undefined}
+        aria-label={collapsed ? entry.label : undefined}
       >
         <entry.icon className={cn("size-[17px] shrink-0", active && "text-primary")} />
         {!collapsed && <span>{entry.label}</span>}
