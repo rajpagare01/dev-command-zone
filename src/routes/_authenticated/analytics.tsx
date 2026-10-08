@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PageShell } from "@/components/layout/page-shell";
 import { AnalyticsPage } from "@/components/analytics/analytics-page";
 export const Route = createFileRoute("/_authenticated/analytics")({
   head: () => ({
@@ -20,8 +21,8 @@ export const Route = createFileRoute("/_authenticated/analytics")({
     ],
   }),
   component: () => (
-    
+    <PageShell>
       <AnalyticsPage />
-    
+    </PageShell>
   ),
 });

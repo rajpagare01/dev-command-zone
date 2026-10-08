@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PageShell } from "@/components/layout/page-shell";
 import { SettingsPage } from "@/components/settings/settings-page";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
@@ -18,8 +19,8 @@ export const Route = createFileRoute("/_authenticated/settings")({
     ],
   }),
   component: () => (
-    
+    <PageShell>
       <SettingsPage />
-    
+    </PageShell>
   ),
 });
