@@ -20,6 +20,7 @@ Avoid rewriting published git history; keep the connected branch in a working st
 - Apply workspace visual themes through global semantic tokens and shared presentation components; this keeps module services, DTOs, routing, and authentication independent of visual refinements.
 - Keep dashboard motion in CSS and key section reveals only by loading/error/empty/ready phase, not response timestamps; this avoids replaying transitions or remounting controls on background refreshes.
 - Keep dashboard keyboard-link focus management in a persistent root presentation helper and cancel it for history navigation; focus section headings after keyboard retries only, so data refreshes never steal focus.
+- Keep dashboard section anchors stable across request phases and section commands in the existing Radix/cmdk palette; explicit section selection focuses content after dialog dismissal without changing URLs on the dashboard.
 
 ## Design & Launch Constraints
 

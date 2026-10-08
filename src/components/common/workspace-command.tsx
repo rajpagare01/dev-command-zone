@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { BarChart3, BriefcaseBusiness, CheckSquare2, Clock3, Code2, FolderKanban, GraduationCap, Keyboard, LayoutDashboard, RotateCw, Search, Settings, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandShortcut } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { dashboardSections } from "@/components/common/dashboard-sections";
 
 const destinations = [
   { id: "dashboard", label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, key: "H" },
@@ -53,9 +54,51 @@ function Keys({ keys }: { keys: string[] }) {
 export function WorkspaceCommand() {
   const [open, setOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [sectionTarget, setSectionTarget] = useState<string | null>(null);
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   const [prefs, setPrefs] = useState<PalettePrefs>({ recent: [], favorites: [] });
   const navigate = useNavigate();
   const client = useQueryClient();
+
+  useEffect(() => {
+    if (!sectionTarget) return;
+    const cancel = () => setSectionTarget(null);
+    window.addEventListener("popstate", cancel);
+    document.addEventListener("pointerdown", cancel);
+    let frame = 0;
+    let observer: MutationObserver | undefined;
+    const timeout = window.setTimeout(cancel, 3000);
+    if (!open && pathname === "/dashboard") {
+      const focus = () => {
+        const heading = document.getElementById(sectionTarget);
+        if (!heading || document.querySelector('[role="dialog"]')) return;
+        heading.focus({ preventScroll: true });
+        heading.scrollIntoView({ block: "start", behavior: "instant" });
+        cancel();
+      };
+      // Wait for the dialog's focus restoration before handing focus to content.
+      frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => {
+          observer = new MutationObserver(focus);
+          observer.observe(document.body, { childList: true, subtree: true });
+          focus();
+        });
+      });
+    }
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      clearTimeout(timeout);
+      window.removeEventListener("popstate", cancel);
+      document.removeEventListener("pointerdown", cancel);
+    };
+  }, [sectionTarget, open, pathname]);
+
+  const goToSection = (id: string) => {
+    setSectionTarget(id);
+    setOpen(false);
+    if (pathname !== "/dashboard") void navigate({ to: "/dashboard" }).catch(() => setSectionTarget(null));
+  };
 
   useEffect(() => { setPrefs(readPrefs()); }, []);
   const returnFocus = useRef<HTMLElement | null>(null);
@@ -157,13 +200,23 @@ export function WorkspaceCommand() {
       <Keyboard className="size-4" />
     </Button>
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="overflow-hidden p-0 [&>button]:right-1 [&>button]:top-1 [&>button]:grid [&>button]:size-11 [&>button]:place-items-center sm:max-w-xl sm:[&>button]:right-4 sm:[&>button]:top-4 sm:[&>button]:size-4">
+      <DialogContent
+        onCloseAutoFocus={(event) => { if (sectionTarget) event.preventDefault(); }}
+        className="overflow-hidden p-0 [&>button]:right-1 [&>button]:top-1 [&>button]:grid [&>button]:size-11 [&>button]:place-items-center sm:max-w-xl sm:[&>button]:right-4 sm:[&>button]:top-4 sm:[&>button]:size-4"
+      >
         <DialogTitle className="sr-only">DevCommand commands</DialogTitle>
-        <DialogDescription className="sr-only">Search workspace routes and actions. Star a route to pin it to favorites.</DialogDescription>
+        <DialogDescription className="sr-only">Search dashboard sections, workspace routes, and actions. Use arrow keys to select and Enter to open. Escape closes the palette.</DialogDescription>
         <Command>
           <CommandInput placeholder="Where next?" aria-label="Search workspace commands" className="pr-12" />
           <CommandList>
             <CommandEmpty>No matching commands.</CommandEmpty>
+            <CommandGroup heading="Dashboard sections">
+              {dashboardSections.map((section) => (
+                <CommandItem key={section.id} value={`Dashboard section ${section.label}`} keywords={[...section.keywords]} onSelect={() => goToSection(section.id)} className="min-h-11 py-3">
+                  <LayoutDashboard aria-hidden="true" /><span className="min-w-0 break-words">{section.label}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
             {favorites.length > 0 && <CommandGroup heading="Favorites">{favorites.map((item) => row(item, "favorite"))}</CommandGroup>}
             {recent.length > 0 && <CommandGroup heading={<span className="inline-flex items-center gap-1.5"><Clock3 className="size-3" />Recent</span>}>{recent.map((item) => row(item, "recent"))}</CommandGroup>}
             <CommandGroup heading="Workspaces">{destinations.map((item) => row(item, "workspace"))}</CommandGroup>

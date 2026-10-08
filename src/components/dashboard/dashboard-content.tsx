@@ -141,7 +141,7 @@ function Section<T>({
   return (
     <Card className="min-w-0 [overflow-wrap:anywhere]">
       <CardHeader>
-        <h2 ref={headingRef} tabIndex={-1} className="navigation-heading font-display text-sm font-semibold leading-snug">{title}</h2>
+        <h2 id={`dashboard-${layout}`} ref={headingRef} tabIndex={-1} className="navigation-heading scroll-mt-24 font-display text-sm font-semibold leading-snug">{title}</h2>
         <p className="text-sm text-muted-foreground">{subtitle}</p>
       </CardHeader>
       <CardContent aria-busy={query.isPending}>
@@ -325,6 +325,7 @@ export function DashboardContent() {
         </Section>
       </div>
 
+      <h2 id="dashboard-metrics" tabIndex={-1} className="navigation-heading scroll-mt-24 font-display text-sm font-semibold">Key metrics</h2>
       <section
         className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
         aria-label="Key metrics"
@@ -468,7 +469,7 @@ export function DashboardContent() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Quick actions</CardTitle>
+          <h2 id="dashboard-actions" tabIndex={-1} className="navigation-heading scroll-mt-24 font-display text-sm font-semibold">Quick actions</h2>
           <p className="text-sm text-muted-foreground">Open a workspace and add your next item.</p>
         </CardHeader>
         <CardContent className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">

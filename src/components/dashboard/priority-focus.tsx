@@ -45,7 +45,7 @@ export function PriorityFocus({ solvedToday, dsaError, dsaPending }: { solvedTod
   });
   return <section aria-label="Priority focus">
     <div className="mb-3 grid min-w-0 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
-      <h2 className="font-display text-base font-semibold">Priority focus</h2>
+      <h2 id="dashboard-priority" tabIndex={-1} className="navigation-heading scroll-mt-24 font-display text-base font-semibold">Priority focus</h2>
       <div className="grid min-w-0 grid-cols-2 gap-2 sm:flex">
         {([{ to: "/dsa", label: "DSA", key: "D" }, { to: "/tasks", label: "Tasks", key: "T" }, { to: "/jobs", label: "Jobs", key: "J" }] as const).map((item) => <Button key={item.to} variant="ghost" size="sm" className="h-11 min-w-11 gap-2 px-2 sm:h-8" asChild><Link to={item.to}>{item.label}<kbd className="rounded-sm border border-border px-1 font-mono text-[10px] text-muted-foreground">G {item.key}</kbd></Link></Button>)}
         <ShortcutsToggle />
