@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useRef, type MouseEvent, type ReactNode } from "react";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import {
@@ -50,7 +50,7 @@ function greeting() {
   return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
 }
 
-function SectionError({ onRetry }: { onRetry: () => void }) {
+function SectionError({ onRetry }: { onRetry: (event: MouseEvent<HTMLButtonElement>) => void }) {
   return (
     <div
       role="alert"
@@ -126,10 +126,22 @@ function Section<T>({
   children: (d: T) => ReactNode;
 }) {
   const phase = query.isPending ? "loading" : query.isError ? "error" : isEmpty(query.data) ? "empty" : "ready";
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const retry = async (event: MouseEvent<HTMLButtonElement>) => {
+    const keyboard = event.detail === 0;
+    const trigger = event.currentTarget;
+    await query.refetch();
+    // Do not interrupt someone who moved to another control during the request.
+    requestAnimationFrame(() => {
+      if (keyboard && (document.activeElement === document.body || document.activeElement === trigger)) {
+        headingRef.current?.focus({ preventScroll: true });
+      }
+    });
+  };
   return (
     <Card className="min-w-0 [overflow-wrap:anywhere]">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <h2 ref={headingRef} tabIndex={-1} className="navigation-heading font-display text-sm font-semibold leading-snug">{title}</h2>
         <p className="text-sm text-muted-foreground">{subtitle}</p>
       </CardHeader>
       <CardContent aria-busy={query.isPending}>
@@ -137,7 +149,7 @@ function Section<T>({
         {query.isPending ? (
           <SectionSkeleton layout={layout} title={title} />
         ) : query.isError ? (
-          <SectionError onRetry={() => void query.refetch()} />
+          <SectionError onRetry={retry} />
         ) : isEmpty(query.data) ? (
           <SectionEmpty {...empty} />
         ) : (
